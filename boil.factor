@@ -19,7 +19,7 @@ TUPLE: fcall  x f ;
 TUPLE: lambda { captures hash-set } def { name string } ;
 TUPLE: deeptoken token { depth fixnum } ;
 
-TUPLE: func    { arity fixnum } { impl composed } { curr array } ;
+TUPLE: func    { symbol fixnum } { curr array } ;
 TUPLE: closure { captures hashtable } def { name string } ;
 
 UNION: val   number array func lambda ;
@@ -177,14 +177,13 @@ MEMO: primitives ( -- assoc )
     { ' $ 1 [ listify reverse ] }
     { ' ? 1 [ [ <repetition> >array ] map-index concat ] }
   }
-  [ first3 over { [ ] [ first ] [ first2 swap ] [ first3 spin ] } nth prepose
-    { } func boa 2array ] map >hashtable
+  [ first3 over { [ ] [ first ] [ first2 swap ] [ first3 spin ] } nth prepose 2array ] H{ } map>assoc
 ;
 
 : eval ( ctx expr -- ctx val )
   { { [ dup fcall?  ] [ >fcall< [ eval ] dip swap [ eval ] dip swap apply ] }
     { [ dup ident?  ] [ inner>> over at ] }
-    { [ dup prim?   ] [ inner>> primitives at clone ] }
+    { [ dup prim?   ] [ inner>> { } func boa ] }
     { [ dup numlit? ] [ inner>> ] }
     { [ dup vector? ] [ [ eval ] map >array ] }
     { [ dup lambda? ] [
@@ -193,12 +192,14 @@ MEMO: primitives ( -- assoc )
   } cond
 ;
 
-: can-run-func ( func -- ? ) [ arity>> ] [ curr>> length ] bi <= ;
+: get-arity    ( func -- arity ) symbol>> primitives at first  ;
+: get-impl     ( func -- impl  ) symbol>> primitives at second ;
+: can-run-func ( func -- ? ) [ get-arity ] [ curr>> length ] bi <= ;
 
 : apply ( ctx x f -- ctx f(x) )
   { { [ dup func? ] [
       clone [ swap suffix ] change-curr
-      dup can-run-func [ [ curr>> ] [ impl>> ] bi call( ctx args -- ctx result ) ] when
+      dup can-run-func [ [ curr>> ] [ get-impl ] bi call( ctx args -- ctx result ) ] when
     ] }
     { [ dup fixnum? ] [ over array? [ over length rem swap nth ] [ drop ] if ] }
     { [ dup array? ] [ [ [ apply ] keepd swap ] map nip ] }

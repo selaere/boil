@@ -6,7 +6,7 @@
   %  . div
   &  . matches
   '  . each
-  (  .   paren enter
+  (  .   paren open
   )  .   paren close
   *  . multiply
   +  . add
