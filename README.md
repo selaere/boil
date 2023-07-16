@@ -120,8 +120,8 @@ G. G  ` :: ^::          ;; xFGH => x  F G: H:
 ` :: ^::                ;; yay
 ```
 ## builtins
-<table>
-<tr><tr></tr><th>usage</th><th>name</th><th>example</th></tr>
+<table><tr></tr>
+<tr><th>usage</th><th>name</th><th>example</th></tr>
 <tr>
 <td align="right"><code>x!</code></td>
 <td>iota</td>
