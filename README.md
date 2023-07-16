@@ -97,7 +97,7 @@ a lambda that just consists of the argument being called with a function is the 
 ```
 "catnip" 2(n. # !: n+: ^)
 ```
-we can still reduce this to not use any lambdas at all. if you play with the combinators for a bit, you might arrive to something like this. <code>F  G :\`</code> is reverse compose, i think of it as adding a step to do before the function (get the domain Before we add)
+we can still reduce this to not use any lambdas at all. if you play with the combinators for a bit, you might arrive to something like this. `` F  G :` `` is reverse compose, i think of it as adding a step to do before the function (get the domain Before we add)
 ```
 "catnip" 2(n.  n  +  # !: :`  ^)
 ```
@@ -106,7 +106,7 @@ turning this into a function just means composing all functions together (becaus
 "catnip" 2(+  # !: :` :  ^:) ;; "tnipca"
 ```
 
-with these combinators you can build other combinators, if you feel like it. here is the infamous S combinator (`x  F GS => xF xG`, or `λgfx.gx(fx)`)
+with these combinators you can build other combinators, if you feel like it. here is the infamous S combinator (<code>x&nbsp;&nbsp;F&nbsp;GS&nbsp;=>&nbsp;xF&nbsp;xG</code>, or `λgfx.gx(fx)`)
 ```
 G. F. x.  xF xG         ;; note how the args are listed backwards
 G. F. x.  x  x F G`     ;; x yF => y  x F`
@@ -121,185 +121,185 @@ G. G  ` :: ^::          ;; xFGH => x  F G: H:
 ```
 ## builtins
 <table>
-<tr><th>usage</th><th>name</th><th>example</th></tr><tr></tr>
+<tr><tr></tr><th>usage</th><th>name</th><th>example</th></tr>
 <tr>
-<td><code>x!</code></td>
+<td align="right"><code>x!</code></td>
 <td>iota</td>
 <td><pre>
-5!          => { 0 1 2 3 4 }
-5-!         => { -1 -2 -3 -4 -5 }
-"string" 4! => "stri"
-2 3, !      => { { 0 1 } { 2 3 } { 4 5 } }
+5!          ;; { 0 1 2 3 4 }
+5-!         ;; { -1 -2 -3 -4 -5 }
+"string" 4! ;; "stri"
+2 3, !      ;; { { 0 1 } { 2 3 } { 4 5 } }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x#</code></td>
+<td align="right"><code>x#</code></td>
 <td>length</td>
 <td><pre>
-12 34 56 . # => 3
-"string"#    => 6
-4#           => 1
+12 34 56 . # ;; 3
+"string"#    ;; 6
+4#           ;; 1
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x$</code></td>
+<td align="right"><code>x$</code></td>
 <td>reverse</td>
 <td><pre>
-"string"$ => "gnirts"
-1$        => { 1 }
+"string"$ ;; "gnirts"
+1$        ;; { 1 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y&</code></td>
+<td align="right"><code>x y&</code></td>
 <td>match</td>
 <td><pre>
-"meow" "meow"& => 1
-"woof" "meow"& => 0
+"meow" "meow"& ;; 1
+"woof" "meow"& ;; 0
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x f'</code></td>
+<td align="right"><code>x f'</code></td>
 <td>each</td>
 <td><pre>
-3 1 2 . !' => { { 0 1 2 } { 0 } { 0 1 } }
+3 1 2 . !' ;; { { 0 1 2 } { 0 } { 0 1 } }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y*</code></td>
+<td align="right"><code>x y*</code></td>
 <td>times</td>
 <td><pre>
-1 2 3 .  4 5 6 . * => { 4 10 18 }
+1 2 3 .  4 5 6 . * ;; { 4 10 18 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y+</code></td>
+<td align="right"><code>x y+</code></td>
 <td>add</td>
 <td><pre>
-1 2 3 .  4 5 6 . + => { 5 7 9 }
+1 2 3 .  4 5 6 . + ;; { 5 7 9 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y,</code></td>
+<td align="right"><code>x y,</code></td>
 <td>concat</td>
 <td><pre>
-1 2 3 .  4 5 6 . , => { 1 2 3 4 5 6 }
-"word" 32,         => "word "
-0  1 4 9 . ,       => { 0 1 4 9 }
+1 2 3 .  4 5 6 . , ;; { 1 2 3 4 5 6 }
+"word" 32,         ;; "word "
+0  1 4 9 . ,       ;; { 0 1 4 9 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x-</code></td>
+<td align="right"><code>x-</code></td>
 <td>negate</td>
 <td><pre>
-0 1 2 . - => { 0 -1 -2 }
+0 1 2 . - ;; { 0 -1 -2 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x f/</code></td>
+<td align="right"><code>x f/</code></td>
 <td>fold</td>
 <td><pre>
-2 3 4 . +/ => 9
-2 3 4 . */ => 24
-1 2 .  3 4 .  5 6 .  .  ,/  =>  { 1 2 3 4 5 6 }
+2 3 4 . +/ ;; 9
+2 3 4 . */ ;; 24
+1 2 .  3 4 .  5 6 .  .  ,/  ;;  { 1 2 3 4 5 6 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x  f g:</code></td>
+<td align="right"><code>x  f g:</code></td>
 <td>compose</td>
 <td><pre>
-"cats"  # !:    => { 0 1 2 3 }
-1 2 3 . 1(- +:) => { 0 1 2 }
+"cats"  # !:    ;; { 0 1 2 3 }
+1 2 3 . 1(- +:) ;; { 0 1 2 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>f g;</code></td>
+<td align="right"><code>f g;</code></td>
 <td>const</td>
 <td><pre>
-1 0; => 0
+1 0; ;; 0
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y&lt;</code></td>
+<td align="right"><code>x y&lt;</code></td>
 <td>less</td>
 <td><pre>
-4 5 6 . 5< => { 1 0 0 }
+4 5 6 . 5< ;; { 1 0 0 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y=</code></td>
+<td align="right"><code>x y=</code></td>
 <td>equal</td>
 <td><pre>
-4 5 6 . 5= => { 0 1 0 }
+4 5 6 . 5= ;; { 0 1 0 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y></code></td>
+<td align="right"><code>x y></code></td>
 <td>greater</td>
 <td><pre>
-4 5 6 . 5> => { 0 0 1 }
+4 5 6 . 5> ;; { 0 0 1 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x?</code></td>
+<td align="right"><code>x?</code></td>
 <td>where</td>
 <td><pre>
-0 0 0 1 0 0 1 0 1 1 0 . ? => { 3 6 8 9 }
-0 1 3 0 2 0 4 . ? => { 1 2 2 2 4 4 6 6 6 6 }
+0 0 0 1 0 0 1 0 1 1 0 . ? ;; { 3 6 8 9 }
+0 1 3 0 2 0 4 . ? ;; { 1 2 2 2 4 4 6 6 6 6 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y@</code></td>
+<td align="right"><code>x y@</code></td>
 <td>const</td>
 <td><pre>
-1 2@ => 2
+1 2@ ;; 2
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>f x[</code></td>
+<td align="right"><code>f x[</code></td>
 <td>swid</td>
 <td><pre>
-3 "hello"[ => 'l'
-+ 2[ 3[    => 5
+3 "hello"[ ;; 'l'
++ 2[ 3[    ;; 5
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x f\</code></td>
+<td align="right"><code>x f\</code></td>
 <td>scan</td>
 <td><pre>
-4 2 5 3 2- 3 . +\ => { 4 6 11 14 12 15 }
+4 2 5 3 2- 3 . +\ ;; { 4 6 11 14 12 15 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x]</code></td>
+<td align="right"><code>x]</code></td>
 <td>wrap</td>
 <td><pre>
-3 4 5 . ] => { { 3 4 5 } }
+3 4 5 . ] ;; { { 3 4 5 } }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x f^</code></td>
+<td align="right"><code>x f^</code></td>
 <td>self</td>
 <td><pre>
-4 *^ => 16
+4 *^ ;; 16
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x_</code></td>
+<td align="right"><code>x_</code></td>
 <td>floor</td>
 <td><pre>
-4.5_ => 4
+4.5_ ;; 4
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x  y f`</code></td>
+<td align="right"><code>x  y f`</code></td>
 <td>swap</td>
 <td><pre>
-1 2 3 .  4 ,` => { 4 1 2 3 }
+1 2 3 .  4 ,` ;; { 4 1 2 3 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y{</code></td>
+<td align="right"><code>x y{</code></td>
 <td>max</td>
 <td><pre>
-4 5 6 . 5{ => { 5 5 6 }
+4 5 6 . 5{ ;; { 5 5 6 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x  y f|</code></td>
+<td align="right"><code>x  y f|</code></td>
 <td>zip</td>
 <td><pre>
-1 2 3 .  4 5 6 . ,| => { { 1 4 } { 2 5 } { 3 6 } } 
+1 2 3 .  4 5 6 . ,| ;; { { 1 4 } { 2 5 } { 3 6 } } 
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x y}</code></td>
+<td align="right"><code>x y}</code></td>
 <td>min</td>
 <td><pre>
-4 5 6 . 5} => { 4 5 5 }
+4 5 6 . 5} ;; { 4 5 5 }
 </pre></td></tr><tr></tr>
 <tr>
-<td><code>x~</code></td>
+<td align="right"><code>x~</code></td>
 <td>not</td>
 <td>
 
 same as `- 1+:`
 ```
-1 2 0 4 0 5 0 6 . 0= ~ => { 1 1 0 1 0 1 0 1 }
+1 2 0 4 0 5 0 6 . 0= ~ ;; { 1 1 0 1 0 1 0 1 }
 ```
 </td>
 </table>
