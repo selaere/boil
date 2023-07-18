@@ -1,9 +1,9 @@
 USING: accessors arrays ascii assocs combinators command-line
-continuations grouping hash-sets hashtables io
-io.encodings.strict io.encodings.utf8 io.files io.styles kernel
-math math.constants math.functions math.order math.parser
-namespaces prettyprint prettyprint.custom prettyprint.sections
-quotations ranges sequences sets strings ui.theme vectors ;
+continuations grouping hash-sets hashtables io io.encodings.utf8
+io.files io.styles kernel math math.constants math.functions
+math.order math.parser namespaces prettyprint prettyprint.custom
+prettyprint.sections quotations ranges sequences sets strings
+ui.theme vectors ;
 IN: boil
 
 << ALIAS: ' CHAR: >>
@@ -31,8 +31,7 @@ ERROR: unclosed-parenthesis ;
 ; inline
 
 : cut-some-while ( ... seq quot: ( ... elt -- ... ? ) -- ... tail head )
-  [ not ] compose
-  [ 1 -rot find-from drop ] keepd [ length or ] keep swap cut-slice swap
+  negate [ 1 -rot find-from drop ] keepd [ length or ] keep swap cut-slice swap
 ; inline
 
 : readtoken ( src -- src' token )
@@ -128,11 +127,14 @@ DEFER: read-at-depth
 DEFER: apply
 : 2apply ( ctx x y f -- ctx f(x)(y) ) rot [ apply ] dip swap apply ;
 
-: 2scalar ( ctx x y quot: ( ctx x y -- ctx val ) -- ctx val )
+: 2each ( ctx x y quot: ( ctx x y -- ctx val ) -- ctx val )
   2over [ array? ] bi@
-  2dup or [ [ [ 2scalar ] curry ] 2dip ] when
   2array { { { f f } [ call ]      } { { t t } [ 2map ]     }
            { { t f } [ curry map ] } { { f t } [ with map ] } } case
+; inline recursive
+
+: 2scalar ( ctx x y quot: ( ctx x y -- ctx val ) -- ctx val )
+  2over [ array? ] either? [ [ 2scalar ] curry ] when 2each
 ; inline recursive
 
 : 1scalar ( ctx x quot: ( ctx x -- ctx val ) -- ctx val )
@@ -175,8 +177,8 @@ MEMO: primitives ( -- assoc )
     { ' ^ 2 [ [ apply ] keepd swap apply ] }
     { ' # 1 [ dup array? [ length ] [ drop 1 ] if ] }
     { ' ! 1 [ iota ] }
-    { ' ' 2 [ [ apply ] curry map ] }
-    { ' | 3 [ [ 2apply ] curry 2map ] }
+    { ' ' 2 [ [ apply ] curry over array? [ map ] [ call ] if ] }
+    { ' | 3 [ [ 2apply ] curry 2each ] }
     { ' @ 2 [ nip ] }
     { ' / 2 [ [ unclip ] dip [ 2apply ] curry reduce ] }
     { ' \ 2 [ [ unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
@@ -241,6 +243,6 @@ M: func pprint*
 : boil ( string -- value ) parse 0 <hashtable> swap eval nip ;
 
 : repl ( -- ) [ "    " write flush "\n" read-until drop boil . t ] loop ;
-: main ( -- ) command-line get ?first [ repl f ] unless* utf8 strict file-contents boil print ;
+: main ( -- ) command-line get ?first [ repl f ] unless* utf8 file-contents boil print ;
 
 MAIN: main
