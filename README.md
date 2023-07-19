@@ -153,6 +153,13 @@ and we can use like this! the syntax for lambdas also works for assignment:
 1$        ;; { 1 }
 </pre></td></tr><tr></tr>
 <tr>
+<td align="right"><code>x%</code></td>
+<td>reciprocal</td>
+<td><pre>
+3%    ;; 1/3
+6 3%* ;; 2
+</pre></td></tr><tr></tr>
+<tr>
 <td align="right"><code>x y&</code></td>
 <td>match</td>
 <td><pre>
