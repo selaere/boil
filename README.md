@@ -119,6 +119,12 @@ G. G ` : ^:             ;; (space things out)
 G. G  ` :: ^::          ;; xFGH => x  F G: H:
 ` :: ^::                ;; yay
 ```
+
+and we can use like this! we can use the same syntax for lambdas for assignment
+```
+` :: ^:: S.  4  ! ,S  ;; { 0 1 2 3 4 }
+;; 4  ! ,S  ===  4! 4,
+```
 ## builtins
 <table><tr></tr>
 <tr><th>usage</th><th>name</th><th>example</th></tr>
@@ -298,9 +304,7 @@ G. G  ` :: ^::          ;; xFGH => x  F G: H:
 <td>
 
 same as `- 1+:`
-```
-1 2 0 4 0 5 0 6 . 0= ~ ;; { 1 1 0 1 0 1 0 1 }
-```
+<pre>1 2 0 4 0 5 0 6 . 0= ~ ;; { 1 1 0 1 0 1 0 1 }</pre>
 </td>
 </table>
 
@@ -320,4 +324,6 @@ how 2 sort?
 
 mechanism for importing / exporting / unpacking somehow?
 
-unbounded recursion is non-trivial . fixed-point combinators? 
+unbounded recursion is non-trivial . fixed-point combinators?
+
+names with numbers would be cool i think
