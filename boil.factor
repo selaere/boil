@@ -41,12 +41,14 @@ ERROR: unclosed-parenthesis ;
     { [ dup ' \n = ] [ drop rest-slice nothing ] }
     { [ dup not ] [ drop f ] }
     { [ dup ascii:digit? ]
-      [ drop [ [ ascii:digit? ] [ ' . = ] bi or ] cut-some-while dec> numlit boa ] }
+      [ drop [ [ ascii:digit? ] [ ' . = ] bi or ] cut-some-while
+        dec> numlit boa ] }
     { [ dup ascii:Letter? ]
       [ drop [ [ ascii:letter? ] [ ' . = ] bi or ] cut-some-while
         dup ?last ' . = [ but-last vardot boa ] [ >string ident boa ] if ] }
     { [ dup ' " = ]
-      [ drop [ ' " = not ] cut-some-while rest-slice >vector [ numlit boa ] map [ rest-slice ] dip ] }
+      [ drop [ ' " = not ] cut-some-while rest-slice 
+        [ numlit boa ] V{ } map-as [ rest-slice ] dip ] }
     { [ dup ' ( = ] [ drop rest-slice '(' ] }
     { [ dup ' ) = ] [ drop rest-slice ')' ] }
     { [ dup ' . = ] [ drop rest-slice '.' ] }
@@ -74,7 +76,8 @@ DEFER: read-expr
   dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep
   over ')' = [ nip f swap ] when
   over '(' = [ [ drop read-tokens swap read-expr ] dip ] when
-  over nothing = [ 2drop readdeeptoken ] [ swap [ swap deeptoken boa ] [ drop f ] if* ] if
+  over nothing =
+    [ 2drop readdeeptoken ] [ swap [ swap deeptoken boa ] [ drop f ] if* ] if
 ;
 
 : read-tokens ( code -- tokens code )
@@ -103,17 +106,19 @@ DEFER: read-at-depth
 : ?rest-slice ( seq -- slice ) [ { } ] [ rest-slice ] if-empty ;
 
 : read-expr ( tokens -- expr )
-  [ ?rest-slice [ depth>> ] map 0 [ max ] reduce 1 + ] keep swap read-at-depth nip
+  [ ?rest-slice [ depth>> ] map 0 [ max ] reduce 1 + ] keep
+  swap read-at-depth nip
 ;
 
 : parse ( code -- tokens ) read-tokens drop read-expr ;
 
 : fmt-parens ( expr -- )
-  { { [ dup fcall?  ] [ "(" write >fcall< [ fmt-parens ] dip " " write fmt-parens ")" write ] }
+  { { [ dup fcall?  ] [
+      "(" write >fcall< [ fmt-parens ] dip " " write fmt-parens ")" write ] }
     { [ dup ident?  ] [ inner>> write ] }
     { [ dup prim?   ] [ inner>> write1 ] }
     { [ dup numlit? ] [ inner>> pprint ] }
-    { [ dup vector? ] [ "(" write [ fmt-parens " " write ] each ".)" write ]  }
+    { [ dup vector? ] [ "(" write [ fmt-parens " " write ] each ".)" write ] }
     { [ dup lambda? ]
       [ "(" write
         [ captures>> members [ write ":" write ] each ]
@@ -191,12 +196,15 @@ MEMO: primitives ( -- assoc )
     { "Out" 1 [ ... { } ] }
   }
   { sin cos tan asin acos atan sqrt round exp ln }
-  [ [ name>> unclip ch>upper prefix 1 ] [ 1quotation [ 1scalar ] curry ] bi 3array ] map append
+  [ [ name>> unclip ch>upper prefix 1 ] 
+    [ 1quotation [ 1scalar ] curry ] bi 3array ] map append
   [ first3 2array ] H{ } map>assoc
 ;
 
 : resolve ( ctx name -- ctx val/f )
-  over ?at [ dup primitives at dup first 0 = [ nip second call( -- x ) ] [ drop { } func boa ] if ] unless
+  over ?at [
+    dup primitives at dup first 0 =
+    [ nip second call( -- x ) ] [ drop { } func boa ] if ] unless
 ;
 
 : eval ( ctx expr -- ctx val )
@@ -243,6 +251,8 @@ M: func pprint*
 : boil ( string -- value ) parse 0 <hashtable> swap eval nip ;
 
 : repl ( -- ) [ "    " write flush "\n" read-until drop boil . t ] loop ;
-: main ( -- ) command-line get ?first [ repl f ] unless* utf8 file-contents boil print ;
+: main ( -- )
+  command-line get ?first [ repl f ] unless* utf8 file-contents boil print
+;
 
 MAIN: main
