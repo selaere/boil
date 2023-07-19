@@ -120,7 +120,7 @@ G. G  ` :: ^::          ;; xFGH => x  F G: H:
 ` :: ^::                ;; yay
 ```
 
-and we can use like this! we can use the same syntax for lambdas for assignment
+and we can use like this! the syntax for lambdas also works for assignment:
 ```
 ` :: ^:: S.  4  ! ,S  ;; { 0 1 2 3 4 }
 ;; 4  ! ,S  ===  4! 4,
