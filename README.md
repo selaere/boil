@@ -1,3 +1,5 @@
+## how to run
+install [factor](https://factorcode.org) and then `rlwrap factor boil.factor`
 # boil
 functions are postfix, i.e. `xF` represents calling *F* with *x* as an argument.
 ```
@@ -318,7 +320,7 @@ same as `- 1+:`
 ## other builtins
 
 * `xSin` `xCos` `xTan` `xAsin` `xAcos` `xAtan` `xSqrt` `xRound` `xExp` `xLn` do exactly what you expect them to do
-* `b nExp` is b to the power of n
+* `b nPow` is b to the power of n
 * `pi` is pi
 * `sWrite` writes a string to stdout
 * `sPrint` writes a string to stdout with a trailing newline
@@ -326,11 +328,15 @@ same as `- 1+:`
 
 ## uncertain
 how do multiline files ?
+- i want to do something smart with indentation, to go along with the spacing-based precedence, but i'm not sure exactly how that would work
 
 how 2 sort?
+- implementing one is definitely possible, but unwieldy
+- `Grade^` would be very nice
 
-mechanism for importing / exporting / unpacking somehow?
+unbounded recursion is non-trivial. fixed-point combinators?
 
-unbounded recursion is non-trivial . fixed-point combinators?
+identifiers with numbers would be cool i think
 
-names with numbers would be cool i think
+keep state in the repl
+- set variables by having `name.` at the end ?

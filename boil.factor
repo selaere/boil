@@ -1,9 +1,9 @@
 USING: accessors arrays ascii assocs combinators command-line
-continuations grouping hash-sets hashtables io io.encodings.utf8
-io.files io.styles kernel math math.constants math.functions
-math.order math.parser namespaces prettyprint prettyprint.custom
-prettyprint.sections quotations ranges sequences sets strings
-ui.theme vectors ;
+continuations debugger grouping hash-sets hashtables io
+io.encodings.utf8 io.files io.styles kernel math math.constants
+math.functions math.order math.parser namespaces prettyprint
+prettyprint.custom prettyprint.sections quotations ranges
+sequences sets strings ui.theme vectors ;
 IN: boil
 
 << ALIAS: ' CHAR: >>
@@ -89,15 +89,14 @@ DEFER: read-at-depth
 ;
 
 : read-at-depth ( tokens depth -- tokens expr )
-  [ unclip token>> ] [| d |
-    0 <vector> swap
-    [ dup ?first [ depth>> d < ] [ f ] if* ]
-    [ dup ?first [ CHAR: ; prim boa 0 deeptoken boa ] unless*
-      token>> dup '.' =
-        [ drop [ 1vector ] dip rest-slice ]
-        [ dup vardot? [ inner>> read-lambda ] [ drop d 1 - read-at-depth ] if
-          swap [ suffix ] dip ]
-        if
+  [ dup empty? [ CHAR: ; prim boa ] [ unclip token>> ] if ]
+  [| d | 0 <vector> swap
+    [ dup ?first dup [ depth>> d < ] when ]
+    [ dup ?first dup [ token>> ] when dup '.' =
+      [ drop [ 1vector ] dip rest-slice ]
+      [ dup vardot? [ inner>> read-lambda ] [ drop d 1 - read-at-depth ] if
+        swap [ suffix ] dip ]
+      if
     ] do while swap
     unclip [ fcall boa ] reduce
   ] if-zero
@@ -250,7 +249,11 @@ M: func pprint*
 
 : boil ( string -- value ) parse 0 <hashtable> swap eval nip ;
 
-: repl ( -- ) [ "    " write flush "\n" read-until drop boil . t ] loop ;
+: repl ( -- ) 
+  [ "    " write flush "\n" read-until drop
+    [ [ boil . ] [ print-error drop ] recover ] unless-empty t
+  ] loop
+;
 : main ( -- )
   command-line get ?first [ repl f ] unless* utf8 file-contents boil print
 ;
