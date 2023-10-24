@@ -91,8 +91,8 @@ DEFER: read-at-depth
 : read-at-depth ( tokens depth -- tokens expr )
   [ dup empty? [ CHAR: ; prim boa ] [ unclip token>> ] if ]
   [| d | 0 <vector> swap
-    [ dup ?first dup [ depth>> d < ] when ]
-    [ dup ?first dup [ token>> ] when dup '.' =
+    [ dup ?first [ depth>> d < ] ?call ]
+    [ dup ?first [ token>> ] ?call dup '.' =
       [ drop [ 1vector ] dip rest-slice ]
       [ dup vardot? [ inner>> read-lambda ] [ drop d 1 - read-at-depth ] if
         swap [ suffix ] dip ]
