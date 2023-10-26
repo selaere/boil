@@ -187,7 +187,7 @@ MEMO: primitives ( -- assoc )
     { ' / 2 [ [ unclip ] dip [ 2apply ] curry reduce ] }
     { ' \ 2 [ [ unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
     { ' $ 1 [ listify reverse ] }
-    { ' ? 1 [ [ <repetition> >array ] map-index concat ] }
+    { ' ? 1 [ listify [ <repetition> >array ] map-index concat ] }
     { "Pow" 2 [ [ ^ ] 2scalar ] }
     { "pi" 0 [ pi ] }
     { "Write" 1 [ write { } ] }
@@ -236,7 +236,8 @@ MEMO: primitives ( -- assoc )
   } cond
 ;
 
-: show-symbol ( func -- ) 1string dim-color foreground associate styled-text ; 
+: show-symbol ( func -- )
+  dup fixnum? [ 1string ] when dim-color foreground associate styled-text ; 
 
 M: func pprint*
   dup curr>> length 0 =
