@@ -217,9 +217,10 @@ and we can use like this! the syntax for lambdas also works for assignment:
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>f g;</code></td>
-<td>const</td>
+<td>id</td>
 <td><pre>
-1 0; ;; 0
+0;   ;; 0
+1 -; ;; -1
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x y&lt;</code></td>
