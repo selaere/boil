@@ -216,7 +216,7 @@ and we can use like this! the syntax for lambdas also works for assignment:
 1 2 3 . 1(- +:) ;; { 0 1 2 }
 </pre></td></tr><tr></tr>
 <tr>
-<td align="right"><code>f g;</code></td>
+<td align="right"><code>x;</code></td>
 <td>id</td>
 <td><pre>
 0;   ;; 0
