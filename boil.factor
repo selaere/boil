@@ -256,7 +256,7 @@ M: func pprint*
   ] loop
 ;
 : main ( -- )
-  command-line get ?first [ repl f ] unless* utf8 file-contents boil print
+  command-line get ?first [ repl f ] unless* utf8 file-contents boil ...
 ;
 
 MAIN: main
