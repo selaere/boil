@@ -3,7 +3,7 @@ continuations debugger grouping hash-sets hashtables io
 io.encodings.utf8 io.files io.styles kernel math math.constants
 math.functions math.order math.parser namespaces prettyprint
 prettyprint.custom prettyprint.sections quotations ranges
-sequences sets strings ui.theme vectors ;
+sequences sets strings system ui.theme vectors ;
 IN: boil
 
 << ALIAS: ' CHAR: >>
@@ -113,17 +113,17 @@ DEFER: read-at-depth
 
 : fmt-parens ( expr -- )
   { { [ dup fcall?  ] [
-      "(" write >fcall< [ fmt-parens ] dip " " write fmt-parens ")" write ] }
-    { [ dup ident?  ] [ inner>> write ] }
-    { [ dup prim?   ] [ inner>> write1 ] }
-    { [ dup numlit? ] [ inner>> pprint ] }
-    { [ dup vector? ] [ "(" write [ fmt-parens " " write ] each ".)" write ] }
+      f <inset "(" text >fcall< [ fmt-parens ] dip fmt-parens ")" text block> ] }
+    { [ dup ident?  ] [ inner>> text ] }
+    { [ dup prim?   ] [ inner>> 1string text ] }
+    { [ dup numlit? ] [ inner>> pprint* ] }
+    { [ dup vector? ]
+      [ f <inset "(" text [ fmt-parens ] each "." text ")" text block> ] }
     { [ dup lambda? ]
-      [ "(" write
-        [ captures>> members [ write ":" write ] each ]
-        [ name>> write ". " write ]
-        [ def>> fmt-parens ] tri ")" write ] }
-    [ drop "?" write ]
+      [ f <inset "(" text
+        [ name>> text "." text ]
+        [ def>> fmt-parens ] bi ")" text block> ] }
+    [ drop "?" text ]
   } cond
 ;
 : (.) ( expr -- ) fmt-parens "" print ;
@@ -179,7 +179,7 @@ MEMO: primitives ( -- assoc )
     { ' ` 3 [ swapd 2apply ] }
     { ' [ 2 [ swap apply ] }
     { ' ^ 2 [ [ apply ] keepd swap apply ] }
-    { ' # 1 [ dup array? [ length ] [ drop 1 ] if ] }
+    { ' # 1 [ dup array? [ length ] [ drop -1 ] if ] }
     { ' ! 1 [ iota ] }
     { ' ' 2 [ [ apply ] curry over array? [ map ] [ call ] if ] }
     { ' | 3 [ [ 2apply ] curry 2each ] }
@@ -228,7 +228,7 @@ MEMO: primitives ( -- assoc )
       dup can-run-func
       [ [ curr>> swap prefix ] [ get-impl ] bi with-datastack first2 ] when
     ] }
-    { [ dup fixnum? ] [ over array? [ over length rem swap nth ] [ drop ] if ] }
+    { [ dup number? ] [ over array? [ over length rem swap nth ] [ drop ] if ] }
     { [ dup array? ] [ [ [ apply ] keepd swap ] map nip ] }
     { [ dup closure? ]
       [ [ captures>> swap ] [ name>> pick set-at ] [ def>> ] tri eval nip ]
@@ -248,11 +248,17 @@ M: func pprint*
   ] if
 ;
 
+M: closure pprint*
+  f <inset "(" text [ name>> text "." text ] [ def>> fmt-parens ] bi
+  ")" text block>
+;
+
 : boil ( string -- value ) parse 0 <hashtable> swap eval nip ;
 
 : repl ( -- ) 
   [ "    " write flush "\n" read-until drop
-    [ [ boil . ] [ print-error drop ] recover ] unless-empty t
+    [ dup ")q" head? [ "bye" print 0 exit ] when
+    [ boil . ] [ print-error drop ] recover ] unless-empty t
   ] loop
 ;
 : main ( -- )

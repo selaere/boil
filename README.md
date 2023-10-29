@@ -145,7 +145,7 @@ and we can use like this! the syntax for lambdas also works for assignment:
 <td><pre>
 12 34 56 . # ;; 3
 "string"#    ;; 6
-4#           ;; 1
+4#           ;; -1
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x$</code></td>
@@ -312,9 +312,8 @@ and we can use like this! the syntax for lambdas also works for assignment:
 <td align="right"><code>x~</code></td>
 <td>not</td>
 <td>
-
-same as `- 1+:`
-<pre>1 2 0 4 0 5 0 6 . 0= ~ ;; { 1 1 0 1 0 1 0 1 }</pre>
+<pre>1 2 0 4 0 5 0 6 . 0= ~ ;; { 1 1 0 1 0 1 0 1 }
+1- 0 1 2 3 . ~ ;; { 2 1 0 -1 -2 } </pre>
 </td>
 </table>
 

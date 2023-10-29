@@ -34,7 +34,7 @@ if you can do something without recursion, definitely do. boil has no built-in w
 say i have written a function like this:
 
 ```
-L. n.  1-+ L: *`: ^ 1@,  n 2<  n[
+L. n.  1-+ L: *: ^ 1@,  n 2<  n[
 ```
 this returns `L(n-1)*n` if `n<2`, otherwise it just returns `1`. we want to, somehow, pass this function to itself, defining a combinator `Y` where `FY = FYF`. you can try to figure it out yourself, or do what i did and look it up in the internet.
 
@@ -56,7 +56,7 @@ F. (X. (v. v XX)F)(X. (v. v XX)F)  Z.
 ```
 this is called eta-expansion. `x. x 1+` is obviously the same as `1+`, but the `+` first argument will only be passed when the second argument is given. this can end up being useful when the computation of `1+` can loop infinitely if we're not careful.
 ```
-5 (l. n.  1-+ l: *`: ^ 1@,  n 2<  n[)(F. (X. (v. v XX)F)(X. (v. v XX)F)) ;; 120
+5 (l. n.  1-+ l: *: ^ 1@,  n 2<  n[)(F. (X. (v. v XX)F)(X. (v. v XX)F)) ;; 120
 ```
 it works! let's shorten it now. see that the term `X. (v v XX)F` is used twice:
 ```
@@ -80,9 +80,16 @@ we get this symbol soup,
 ```
 ` `: ;^: :` ;^:  Z.
 ```
-which there may very well be a better way to write. let's try it!
+let's try it!
 ```
-    5   (l. n.  1-+ l: *`: ^ 1@,  n 2<  n[)  ` `: ;^: :` ;^:
+    5   (L. n.  1-+ L: *: ^ 1@,  n 2<  n[)  ` `: ;^: :` ;^:
 120
 ```
 yay !!
+
+though if we're applying it directly to a lambda, it might be better to do something like this (note the duplicated `L`):
+
+```
+    5  (L. n.  1-+ LL: *: ^ 1@,  n 2<  n[)`` ;^
+120
+```
