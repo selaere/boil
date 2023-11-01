@@ -12,7 +12,7 @@ TUPLE: numlit { inner number } ;
 TUPLE: ident  { inner string } ;
 TUPLE: vardot { inner string } ;
 TUPLE: prim   { inner fixnum } ;
-SINGLETONS: '(' ')' '.' nothing ;
+SINGLETONS: '(' ')' ',' nothing ;
 
 TUPLE: fcall  x f ;
 : >fcall< ( fcall -- x f ) [ x>> ] [ f>> ] bi ;
@@ -34,25 +34,32 @@ ERROR: unclosed-parenthesis ;
   negate [ 1 -rot find-from drop ] keepd [ length or ] keep swap cut-slice swap
 ; inline
 
+CONSTANT: +subscripts+ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔₕₖₗₘₙₚₛₜᵢᵣᵤᵥⱼᵦᵧᵨᵩᵪ"
+
 : readtoken ( src -- src' token )
   dup ?first
   {
-    { [ over ";;" head? ] [ drop [ ' \n = not ] cut-some-while drop nothing ] }
+    { [ over ".." head? ] [ drop [ ' \n = not ] cut-some-while drop nothing ] }
     { [ dup ' \n = ] [ drop rest-slice nothing ] }
     { [ dup not ] [ drop f ] }
     { [ dup ascii:digit? ]
       [ drop [ [ ascii:digit? ] [ ' . = ] bi or ] cut-some-while
         dec> numlit boa ] }
     { [ dup ascii:Letter? ]
-      [ drop [ [ ascii:letter? ] [ ' . = ] bi or ] cut-some-while
-        dup ?last ' . = [ but-last vardot boa ] [ >string ident boa ] if ] }
+      [ drop [ [ ascii:letter? ] [ +subscripts+ member? ] bi or ] cut-some-while
+        over ?first ' . = 
+        [ [ rest-slice ] dip >string vardot boa ]
+        [ >string ident boa ] if ] }
     { [ dup ' " = ]
       [ drop [ ' " = not ] cut-some-while rest-slice 
         [ numlit boa ] V{ } map-as [ rest-slice ] dip ] }
     { [ dup ' ( = ] [ drop rest-slice '(' ] }
     { [ dup ' ) = ] [ drop rest-slice ')' ] }
-    { [ dup ' . = ] [ drop rest-slice '.' ] }
-    [ [ rest-slice ] dip prim boa ]
+    { [ dup ' , = ] [ drop rest-slice ',' ] }
+    { [ dup ascii? ] [ [ rest-slice ] dip prim boa ] }
+    [ over ?first ' . =
+      [ [ rest-slice ] dip >string vardot boa ]
+      [ >string ident boa ] if ]
   } cond
 ;
 
@@ -92,7 +99,7 @@ DEFER: read-at-depth
   [ dup empty? [ CHAR: ; prim boa ] [ unclip token>> ] if ]
   [| d | 0 <vector> swap
     [ dup ?first [ depth>> d < ] ?call ]
-    [ dup ?first [ token>> ] ?call dup '.' =
+    [ dup ?first [ token>> ] ?call dup ',' =
       [ drop [ 1vector ] dip rest-slice ]
       [ dup vardot? [ inner>> read-lambda ] [ drop d 1 - read-at-depth ] if
         swap [ suffix ] dip ]
@@ -118,7 +125,7 @@ DEFER: read-at-depth
     { [ dup prim?   ] [ inner>> 1string text ] }
     { [ dup numlit? ] [ inner>> pprint* ] }
     { [ dup vector? ]
-      [ f <inset "(" text [ fmt-parens ] each "." text ")" text block> ] }
+      [ f <inset "(" text [ fmt-parens ] each "," text ")" text block> ] }
     { [ dup lambda? ]
       [ f <inset "(" text
         [ name>> text "." text ]
@@ -173,8 +180,7 @@ MEMO: primitives ( -- assoc )
     { ' > 2 [ [ > bool ] 2scalar ] }
     { ' & 2 [ equal bool ] }
     { ' ] 1 [ 1array ] }
-    { ' , 2 [ [ listify ] bi@ append ] }
-    { ' ; 1 [ ] }
+    { ' ; 2 [ [ listify ] bi@ append ] }
     { ' : 3 [ [ apply ] dip apply ] }
     { ' ` 3 [ swapd 2apply ] }
     { ' [ 2 [ swap apply ] }
@@ -186,7 +192,7 @@ MEMO: primitives ( -- assoc )
     { ' @ 2 [ nip ] }
     { ' / 2 [ [ unclip ] dip [ 2apply ] curry reduce ] }
     { ' \ 2 [ [ unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
-    { ' $ 1 [ listify reverse ] }
+    { ' $ 1 [ ] }
     { ' ? 1 [ listify [ <repetition> >array ] map-index concat ] }
     { "Pow" 2 [ [ ^ ] 2scalar ] }
     { "pi" 0 [ pi ] }
@@ -249,7 +255,7 @@ M: func pprint*
 ;
 
 M: closure pprint*
-  f <inset "(" text [ name>> text "." text ] [ def>> fmt-parens ] bi
+  f <inset "(" text [ name>> text "," text ] [ def>> fmt-parens ] bi
   ")" text block>
 ;
 
