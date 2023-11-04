@@ -69,7 +69,7 @@ aha! we've finished. now just apply this to the original list,
 
 removing one argument from this closure is pretty easy. we see again the pattern of using `^` to rearrange a list in some way:
 ```
-"beehive" 5 n. # n~+: !: n!+': ^ .. { "beehi" "eehiv" "ehive" }
+"beehive"  5 n. # n~+: !: n!+': ^ .. { "beehi" "eehiv" "ehive" }
 ```
 removing the other though, is a pain. you can see it's used multiple times, and not at the start of the expression, so we have to rearrange and swap a bunch of things. don't bother. i bothered.
 ```

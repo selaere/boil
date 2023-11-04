@@ -2,8 +2,8 @@ USING: accessors arrays ascii assocs combinators command-line
 continuations debugger grouping hash-sets hashtables io
 io.encodings.utf8 io.files io.styles kernel math math.constants
 math.functions math.order math.parser namespaces prettyprint
-prettyprint.custom prettyprint.sections quotations ranges
-sequences sets strings system ui.theme vectors ;
+prettyprint.custom prettyprint.sections quotations ranges sorting
+sequences sequences.extras sets strings system ui.theme vectors ;
 IN: boil
 
 << ALIAS: ' CHAR: >>
@@ -40,7 +40,7 @@ CONSTANT: +subscripts+ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒ�
   dup ?first
   {
     { [ over ".." head? ] [ drop [ ' \n = not ] cut-some-while drop nothing ] }
-    { [ dup ' \n = ] [ drop rest-slice nothing ] }
+    { [ dup ' \n = ] [ drop nothing ] }
     { [ dup not ] [ drop f ] }
     { [ dup ascii:digit? ]
       [ drop [ [ ascii:digit? ] [ ' . = ] bi or ] cut-some-while
@@ -73,14 +73,12 @@ CONSTANT: +subscripts+ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒ�
   } cond
 ;
 
-: make-lambda ( def name -- lambda )
-  [ [ 0 <hash-set> tuck capture ] [ over delete ] bi* ] 2keep lambda boa
-;
-
 DEFER: read-tokens
 DEFER: read-expr
 : readdeeptoken ( src -- src' deeptoken/f )
-  dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep
+  dup ?first ' \n =
+  [ rest-slice dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep 1000000 swap - ]
+  [            dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep                ] if
   over ')' = [ nip f swap ] when
   over '(' = [ [ drop read-tokens swap read-expr ] dip ] when
   over nothing =
@@ -91,6 +89,10 @@ DEFER: read-expr
   0 <vector> swap [ readdeeptoken ] [ swap [ suffix ] dip ] while*
 ;
 DEFER: read-at-depth
+
+: make-lambda ( def name -- lambda )
+  [ [ 0 <hash-set> tuck capture ] [ over delete ] bi* ] 2keep lambda boa
+;
 : read-lambda ( tokens name -- tokens lambda )
   [ rest-slice dup first depth>> 1 + read-at-depth ] dip make-lambda
 ;
@@ -112,8 +114,8 @@ DEFER: read-at-depth
 : ?rest-slice ( seq -- slice ) [ { } ] [ rest-slice ] if-empty ;
 
 : read-expr ( tokens -- expr )
-  [ ?rest-slice [ depth>> ] map 0 [ max ] reduce 1 + ] keep
-  swap read-at-depth nip
+  dup [ depth>> ] map sort deduplicate swap [ [ over index ] change-depth ] map
+  swap length 1 + read-at-depth nip
 ;
 
 : parse ( code -- tokens ) read-tokens drop read-expr ;
@@ -133,7 +135,7 @@ DEFER: read-at-depth
     [ drop "?" text ]
   } cond
 ;
-: (.) ( expr -- ) fmt-parens "" print ;
+: (.) ( expr -- ) [ fmt-parens ] with-pprint "" print ;
 
 DEFER: apply
 : 2apply ( ctx x y f -- ctx f(x)(y) ) rot [ apply ] dip swap apply ;
