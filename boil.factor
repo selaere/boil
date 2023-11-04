@@ -57,9 +57,9 @@ CONSTANT: +subscripts+ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒ�
     { [ dup ' ) = ] [ drop rest-slice ')' ] }
     { [ dup ' , = ] [ drop rest-slice ',' ] }
     { [ dup ascii? ] [ [ rest-slice ] dip prim boa ] }
-    [ over ?first ' . =
-      [ [ rest-slice ] dip >string vardot boa ]
-      [ >string ident boa ] if ]
+    [ over ?second ' . =
+      [ [ 2 tail-slice ] dip 1string vardot boa ]
+      [ [ rest-slice ] dip 1string ident boa ] if ]
   } cond
 ;
 
