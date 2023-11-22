@@ -8,6 +8,7 @@ making the absolute number is just picking from `$-,` (or `$ -;`) based on the s
 5-  n.  n  n 0< $-,[    .. using thrush `[`:
 5-  0< $-,[: ^          .. and then ^ify
 5-  $-, 0<` ^           .. shorter, weirder alternative
+5-  ! #:                .. >:)
 ```
 
 ## iteration
@@ -18,10 +19,12 @@ bounded-length iteration is pretty easy. try using `!` (iota), `'` (each) and `/
 
 repeating a single function multiple times can be done in multiple ways. knowing that `n?` for a scalar n returns a list of zeroes of length n:
 ```
-21  3 ]f.n.(f n? :/       ) .. doesn't work for n=0
-21  3 ]f.n.(f n?  $ ;`  :/)
-21  3 ]f.n.(f n? ; $/:    ) .. or if we're adding an identity element anyways..
-21  3 ]f.n.(n? ; f@/:     ) .. ignoring the zeroes added by `?` with `@`
+21  3 ]f.n. f n? :/    .. doesn't work for n=0
+21  3 ]f.n. f n? $; :/ .. append identity element
+21  3 ]f.n. f n? ; $/: .. or if we're adding an identity element anyways..
+21  3 ]f.n. n?; f@/:   .. ignoring the zeroes added by `?` with `@`
+21  3 ](? ;:: $/::: `) .. #3 tacit (quite ugly)
+
 .. { { { 21 } } }
 ```
 
@@ -42,9 +45,9 @@ aha! a so-called "Haskell Curry" wrote something like this:
 ```
 F. X.XXF X.XXF  Y.
 
-fY = X.XXf X.XXf
-   = X.XXf X.XXf f
-   = fY f
+AY = X.XXA X.XXA  .. replace X by X.XXA in the first lambda
+   = X.XXA X.XXA A
+   = AY A
 ```
 nice! that works. except it doesn't. if you try to use it, you will get a very scary "`Call stack overflow`" error. in short, what's happening here is that boil uses eager evaluation (instead of "lazy evaluation") and evaluates every function call it comes across. this means that it is going to automatically go
 ```

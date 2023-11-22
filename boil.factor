@@ -3,7 +3,7 @@ continuations debugger grouping hash-sets hashtables io
 io.encodings.utf8 io.files io.styles kernel math math.constants
 math.functions math.order math.parser namespaces prettyprint
 prettyprint.custom prettyprint.sections quotations ranges sorting
-sequences sequences.extras sets strings system ui.theme vectors ;
+sequences sequences.extras sets strings system ui.theme vectors readline ;
 IN: boil
 
 << ALIAS: ' CHAR: >>
@@ -77,8 +77,8 @@ DEFER: read-tokens
 DEFER: read-expr
 : readdeeptoken ( src -- src' deeptoken/f )
   dup ?first ' \n =
-  [ rest-slice dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep 1000000 swap - ]
-  [            dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep                ] if
+  [ rest-slice dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep -1 swap - ]
+  [            dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep           ] if
   over ')' = [ nip f swap ] when
   over '(' = [ [ drop read-tokens swap read-expr ] dip ] when
   over nothing =
@@ -114,7 +114,9 @@ DEFER: read-at-depth
 : ?rest-slice ( seq -- slice ) [ { } ] [ rest-slice ] if-empty ;
 
 : read-expr ( tokens -- expr )
-  dup [ depth>> ] map sort deduplicate swap [ [ over index ] change-depth ] map
+  dup [ depth>> ] map
+  [ 2dup [ 0 < ] bi@ = [ <=> ] [ >=< ] if ] sort-with deduplicate
+  swap [ [ over index ] change-depth ] map
   swap length 1 + read-at-depth nip
 ;
 
@@ -263,8 +265,9 @@ M: closure pprint*
 
 : boil ( string -- value ) parse 0 <hashtable> swap eval nip ;
 
-: repl ( -- ) 
-  [ "    " write flush "\n" read-until drop
+: repl ( -- )
+  [ "    " has-readline?
+    [ flush readline ] [ write flush "\n" read-until drop ] if
     [ dup ")q" head? [ "bye" print 0 exit ] when
     [ boil . ] [ print-error drop ] recover ] unless-empty t
   ] loop

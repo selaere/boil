@@ -13,7 +13,7 @@ the simplest way is to fold with swapped concatenation:
 ```
 but this only works if the elements inside are scalars. it will flatten the list, like `;/` would.
 ```
-"cat" "dog" "fox" , ;`/ .. "foxdogcat"
+"cat" "dog" "fox" ,;`/ .. "foxdogcat"
 ```
 we can make this work by prepending an empty list, and enclosing the list when concatenating:
 ```

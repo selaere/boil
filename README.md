@@ -127,6 +127,14 @@ and we can use like this! the syntax for lambdas also works for assignment:
 ` :: ^:: S.  4  ! ;S  .. { 0 1 2 3 4 }
 .. 4  ! ;S  ===  4! 4;
 ```
+
+more things:
+* [control flow](doc/control_flow.md) (conditions, iteration, recursion)
+* [perplexed face](doc/perplexed_face.md) `:/`
+* [implementing stuff with lists](doc/rearranging_lists.md)
+* [reimplementing scan](doc/reimplementing_scan.md)
+* [syntax](doc/syntax.md) (more detail about how precedence works etc)
+
 ## builtins
 <table><tr></tr>
 <tr><th>usage</th><th>name</th><th>example</th></tr>
@@ -208,11 +216,14 @@ and we can use like this! the syntax for lambdas also works for assignment:
 1 2 3 , 1(- +:) .. { 0 1 2 }
 </pre></td></tr><tr></tr>
 <tr>
-<td align="right"><code>x;</code></td>
-<td>id</td>
+<td align="right"><code>x y;</code></td>
+<td>concat</td>
 <td><pre>
-0;   .. 0
-1 -; .. -1
+1 2 3 ,   4 5 6 ,;    .. { 1 2 3 4 5 6 }
+1 2 3 ,]  4 5 6 ,] ;  .. { { 1 2 3 } { 4 5 6 } }
+1 2;                  .. { 1 2 }
+1  2 3 4 ,;           .. { 1 2 3 4 }
+1 2 3 , 4;            .. { 1 2 3 4 }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x y&lt;</code></td>
