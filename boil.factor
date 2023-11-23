@@ -24,8 +24,6 @@ TUPLE: closure { captures hashtable } def { name string } ;
 
 UNION: val   number array func lambda ;
 
-ERROR: unclosed-parenthesis ;
-
 : find-idx ( ... seq quot: ( ... elt -- ... ? ) -- ... idx )
   dupd find drop swap length or
 ; inline
@@ -98,7 +96,7 @@ DEFER: read-at-depth
 ;
 
 : read-at-depth ( tokens depth -- tokens expr )
-  [ dup empty? [ CHAR: ; prim boa ] [ unclip token>> ] if ]
+  [ dup empty? [ CHAR: $ prim boa ] [ unclip token>> ] if ]
   [| d | 0 <vector> swap
     [ dup ?first [ depth>> d < ] ?call ]
     [ dup ?first [ token>> ] ?call dup ',' =
@@ -238,7 +236,9 @@ MEMO: primitives ( -- assoc )
       dup can-run-func
       [ [ curr>> swap prefix ] [ get-impl ] bi with-datastack first2 ] when
     ] }
-    { [ dup number? ] [ over array? [ over length rem swap nth ] [ drop ] if ] }
+    { [ dup number? ] 
+      [ over [ array? ] [ empty? not ] bi and
+        [ over length rem swap nth ] [ drop ] if ] }
     { [ dup array? ] [ [ [ apply ] keepd swap ] map nip ] }
     { [ dup closure? ]
       [ [ captures>> swap ] [ name>> pick set-at ] [ def>> ] tri eval nip ]
