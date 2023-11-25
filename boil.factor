@@ -3,7 +3,8 @@ continuations debugger grouping hash-sets hashtables io
 io.encodings.utf8 io.files io.styles kernel math math.constants
 math.functions math.order math.parser namespaces prettyprint
 prettyprint.custom prettyprint.sections quotations ranges sorting
-sequences sequences.extras sets strings system ui.theme vectors readline ;
+sequences sequences.extras sequences.private sets strings system
+ui.theme vectors words readline hints ;
 IN: boil
 
 << ALIAS: ' CHAR: >>
@@ -19,7 +20,8 @@ TUPLE: fcall  x f ;
 TUPLE: lambda { captures hash-set } def { name string } ;
 TUPLE: deeptoken token { depth fixnum } ;
 
-TUPLE: func    { symbol union{ fixnum string } } { curr array } ;
+TUPLE: func    { symbol union{ fixnum string } } { curr vector } ;
+: <func> ( symbol -- func ) 3 <vector> func boa ; inline
 TUPLE: closure { captures hashtable } def { name string } ;
 
 UNION: val   number array func lambda ;
@@ -113,7 +115,7 @@ DEFER: read-at-depth
 
 : read-expr ( tokens -- expr )
   dup [ depth>> ] map
-  [ 2dup [ 0 < ] bi@ = [ <=> ] [ >=< ] if ] sort-with deduplicate
+  [ 2dup [ 0 < ] same? [ <=> ] [ >=< ] if ] sort-with deduplicate
   swap [ [ over index ] change-depth ] map
   swap length 1 + read-at-depth nip
 ;
@@ -138,24 +140,24 @@ DEFER: read-at-depth
 : (.) ( expr -- ) [ fmt-parens ] with-pprint "" print ;
 
 DEFER: apply
-: 2apply ( ctx x y f -- ctx f(x)(y) ) rot [ apply ] dip swap apply ;
+: 2apply ( ctx x y f -- ctx f(x)(y) ) rot [ apply ] dip swap apply ; inline
 
-: 2each ( ctx x y quot: ( ctx x y -- ctx val ) -- ctx val )
+: 2each ( ... x y quot: ( ... x y -- ... val ) -- ... val )
   2over [ array? ] bi@
   2array { { { f f } [ call ]      } { { t t } [ 2map ]     }
            { { t f } [ curry map ] } { { f t } [ with map ] } } case
 ; inline recursive
 
-: 2scalar ( ctx x y quot: ( ctx x y -- ctx val ) -- ctx val )
-  2over [ array? ] either? [ [ 2scalar ] curry ] when 2each
+: 2scalar ( ... x y quot: ( ... x y -- ... val ) -- ... val )
+  2over [ array? ] either? [ [ 2scalar ] curry 2each ] [ 2each ] if
 ; inline recursive
 
-: 1scalar ( ctx x quot: ( ctx x -- ctx val ) -- ctx val )
+: 1scalar ( ... x quot: ( ... x -- ... val ) -- ... val )
   over array? [ [ 1scalar ] curry map ] [ call ] if
 ; inline recursive
 
 : listify ( val -- array ) dup array? [ 1array ] unless ;
-: bool ( ? -- x ) 1 0 ? ;
+: bool ( ? -- x ) 1 0 ? ; inline
 
 : equal ( x y -- ? ) 2dup [ lambda? ] either? [ eq? ] [ = ] if ;
 
@@ -165,59 +167,79 @@ DEFER: apply
     [ <groups> [ >array ] map ] each ]
   [ 0 over 0 > [ swap ] when [a..b) >array ] if
 ;
+<<
+USING: parser make lexer ;
+SYNTAX: P[  ! ]
+  scan-number
+  [ suffix parse-quotation ]
+  [ { [ drop ] [ first-unsafe ] [ first2-unsafe swap ] [ first3-unsafe spin ] }
+    nth ] bi prepend >quotation suffix!
+;
+
+SYNTAX: TRIG:
+  [ [ dup unclip ch>upper prefix , 1 ,
+      parse-word 1quotation [ first ] prepose >quotation ,
+    ] { } make suffix
+  ] ";" swap each-token
+;
+>>
 
 ALIAS: ln log  ALIAS: exp e^
-MEMO: primitives ( -- assoc )
+MACRO: primitives ( -- table )
   {
-    { ' + 2 [ [ + ] 2scalar ] }
-    { ' - 1 [ [ neg ] 1scalar ] }
-    { ' * 2 [ [ * ] 2scalar ] }
-    { ' % 1 [ [ recip ] 1scalar ] }
-    { ' { 2 [ [ max ] 2scalar ] }
-    { ' } 2 [ [ min ] 2scalar ] }
-    { ' _ 1 [ [ floor ] 1scalar ] }
-    { ' ~ 1 [ [ 1 swap - ] 1scalar ] }
-    { ' = 2 [ [ = bool ] 2scalar ] }
-    { ' < 2 [ [ < bool ] 2scalar ] }
-    { ' > 2 [ [ > bool ] 2scalar ] }
-    { ' & 2 [ equal bool ] }
-    { ' ] 1 [ 1array ] }
-    { ' ; 2 [ [ listify ] bi@ append ] }
-    { ' : 3 [ [ apply ] dip apply ] }
-    { ' ` 3 [ swapd 2apply ] }
-    { ' [ 2 [ swap apply ] }
-    { ' ^ 2 [ [ apply ] keepd swap apply ] }
-    { ' # 1 [ dup array? [ length ] [ drop -1 ] if ] }
-    { ' ! 1 [ iota ] }
-    { ' ' 2 [ [ apply ] curry over array? [ map ] [ call ] if ] }
-    { ' | 3 [ [ 2apply ] curry 2each ] }
-    { ' @ 2 [ nip ] }
-    { ' / 2 [ [ unclip ] dip [ 2apply ] curry reduce ] }
-    { ' \ 2 [ [ unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
-    { ' $ 1 [ ] }
-    { ' ? 1 [ listify [ <repetition> >array ] map-index concat ] }
-    { "Pow" 2 [ [ ^ ] 2scalar ] }
-    { "pi" 0 [ pi ] }
-    { "Write" 1 [ write { } ] }
-    { "Print" 1 [ print { } ] }
-    { "Out" 1 [ ... { } ] }
-  }
-  { sin cos tan asin acos atan sqrt round exp ln }
-  [ [ name>> unclip ch>upper prefix 1 ] 
-    [ 1quotation [ 1scalar ] curry ] bi 3array ] map append
-  [ first3 2array ] H{ } map>assoc
+    { ' - P[ 1 [ neg ] 1scalar ] }
+    { ' + P[ 2 [ + ] 2scalar ] }
+    { ' * P[ 2 [ * ] 2scalar ] }
+    { ' % P[ 1 [ recip ] 1scalar ] }
+    { ' { P[ 2 [ max ] 2scalar ] }
+    { ' } P[ 2 [ min ] 2scalar ] }
+    { ' _ P[ 1 [ floor ] 1scalar ] }
+    { ' ~ P[ 1 [ 1 swap - ] 1scalar ] }
+    { ' = P[ 2 [ = bool ] 2scalar ] }
+    { ' < P[ 2 [ < bool ] 2scalar ] }
+    { ' > P[ 2 [ > bool ] 2scalar ] }
+    { ' & P[ 2 equal bool ] }
+    { ' ] P[ 1 1array ] }
+    { ' ; P[ 2 [ listify ] bi@ append ] }
+    { ' : P[ 3 [ apply ] dip apply ] }
+    { ' ` P[ 3 swapd 2apply ] }
+    { ' [ P[ 2 swap apply ] }
+    { ' ^ P[ 2 [ apply ] keepd swap apply ] }
+    { ' # P[ 1 dup array? [ length ] [ drop -1 ] if ] }
+    { ' ! P[ 1 iota ] }
+    { ' ' P[ 2 [ apply ] curry over array? [ map ] [ call ] if ] }
+    { ' | P[ 3 [ 2apply ] curry 2each ] }
+    { ' @ P[ 2 nip ] }
+    { ' / P[ 2 [ unclip ] dip [ 2apply ] curry reduce ] }
+    { ' \ P[ 2 [ unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
+    { ' $ P[ 1 ] }
+    { ' ? P[ 1 listify [ <repetition> >array ] map-index concat ] }
+    { "Pow"   P[ 2 [ ^ ] 2scalar ] }
+    { "pi"    P[ 0 pi ] }
+    { "Write" P[ 1 write { } ] }
+    { "Print" P[ 1 print { } ] }
+    { "Out"   P[ 1 ... { } ] }
+    ! TRIG: sin cos tan asin acos atan sqrt round exp ln ;
+  } 1quotation
 ;
 
+MACRO: prim-impl-case ( table -- cond-thing )
+  [ 1 swap remove-nth ] map [ no-case ] swap case>quot ;
+: prim-impl ( ctx args symbol -- ctx return ) primitives prim-impl-case ;
+HINTS: prim-impl { hashtable vector fixnum } { hashtable vector string } ;
+
+MACRO: get-arity-case ( table -- cond-thing )
+  [ first2 1quotation 2array ] map [ no-case ] swap case>quot ;
+: get-arity ( func -- return ) primitives get-arity-case ;
+
 : resolve ( ctx name -- ctx val/f )
-  over ?at [
-    dup primitives at dup first 0 =
-    [ nip second call( -- x ) ] [ drop { } func boa ] if ] unless
-;
+  over ?at [ dup get-arity 0 = [ V{ } swap prim-impl ] [ <func> ] if ] unless
+; inline
 
 : eval ( ctx expr -- ctx val )
   { { [ dup fcall?  ] [ >fcall< [ eval ] dip swap [ eval ] dip swap apply ] }
     { [ dup ident?  ] [ inner>> resolve ] }
-    { [ dup prim?   ] [ inner>> { } func boa ] }
+    { [ dup prim?   ] [ inner>> <func> ] }
     { [ dup numlit? ] [ inner>> ] }
     { [ dup vector? ] [ [ eval ] map >array ] }
     { [ dup lambda? ] [
@@ -226,15 +248,12 @@ MEMO: primitives ( -- assoc )
   } cond
 ;
 
-: get-arity    ( func -- arity ) symbol>> primitives at first  ;
-: get-impl     ( func -- impl  ) symbol>> primitives at second ;
-: can-run-func ( func -- ? ) [ get-arity ] [ curr>> length ] bi <= ;
+: can-run-func ( func -- ? ) [ symbol>> get-arity ] [ curr>> length ] bi <= ;
 
 : apply ( ctx x f -- ctx f(x) )
   { { [ dup func? ] [
-      clone [ swap prefix ] change-curr
-      dup can-run-func
-      [ [ curr>> swap prefix ] [ get-impl ] bi with-datastack first2 ] when
+      clone [ curr>> push ] keep
+      dup can-run-func [ [ curr>> ] [ symbol>> ] bi prim-impl ] when
     ] }
     { [ dup number? ] 
       [ over [ array? ] [ empty? not ] bi and
@@ -253,7 +272,8 @@ M: func pprint*
   dup curr>> length 0 =
   [ symbol>> show-symbol ] [
     f <inset "(" text
-    [ curr>> [ pprint* ] each ] [ symbol>> show-symbol ] bi
+    [ curr>> unclip-slice [ [ pprint* "" text ] each ] [ pprint* ] bi* ]
+    [ symbol>> show-symbol ] bi
     ")" text block>
   ] if
 ;
