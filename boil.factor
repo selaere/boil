@@ -21,8 +21,8 @@ TUPLE: fcall  x f ;
 TUPLE: lambda { captures hash-set } def { name string } ;
 TUPLE: deeptoken token { depth fixnum } ;
 
-TUPLE: func    { symbol union{ fixnum string } } { curr vector } ;
-: <func> ( symbol -- func ) 3 <vector> func boa ; inline
+TUPLE: func    { symbol union{ fixnum string } } { curr array } ;
+: <func> ( symbol -- func ) { } func boa ; inline
 TUPLE: closure { captures hashtable } def { name string } ;
 
 ERROR: function-unexpected x y ;
@@ -250,14 +250,14 @@ MACRO: prim-impl-case ( table -- cond-thing )
   [ 1 swap remove-nth ] map [ no-case ] swap case>quot ;
 : prim-impl ( ctx args symbol -- ctx return )
   [ primitives prim-impl-case ] [ \ primitive-error boa rethrow ] recover ;
-HINTS: prim-impl { hashtable vector fixnum } { hashtable vector string } ;
+HINTS: prim-impl { hashtable array fixnum } { hashtable array string } ;
 
 MACRO: get-arity-case ( table -- cond-thing )
   [ first2 1quotation 2array ] map [ no-case ] swap case>quot ;
 : get-arity ( func -- return ) primitives get-arity-case ;
 
 : resolve ( ctx name -- ctx val/f )
-  over ?at [ dup get-arity 0 = [ V{ } swap prim-impl ] [ <func> ] if ] unless
+  over ?at [ dup get-arity 0 = [ { } swap prim-impl ] [ <func> ] if ] unless
 ; inline
 
 : eval ( ctx expr -- ctx val )
@@ -276,7 +276,7 @@ MACRO: get-arity-case ( table -- cond-thing )
 
 : apply ( ctx x f -- ctx f(x) )
   { { [ dup func? ] [
-      clone [ curr>> push ] keep
+      clone [ swap suffix ] change-curr
       dup can-run-func [ [ curr>> ] [ symbol>> ] bi prim-impl ] when
     ] }
     { [ dup number? ] 
