@@ -152,18 +152,17 @@ DEFER: apply
 : 2apply ( ctx x y f -- ctx f(x)(y) ) rot [ apply ] dip swap apply ; inline
 
 : 2each ( ... x y quot: ( ... x y -- ... val ) -- ... val )
-  2over [ function? ] either? [ drop function-unexpected ] when
   2over [ array? ] bi@
   2array { { { f f } [ call ]      } { { t t } [ 2map ]     }
            { { t f } [ curry map ] } { { f t } [ with map ] } } case
 ; inline recursive
 
 : 2scalar ( ... x y quot: ( ... x y -- ... val ) -- ... val )
+  2over [ function? ] either? [ drop function-unexpected ] when
   2over [ array? ] either? [ [ 2scalar ] curry 2each ] [ 2each ] if
 ; inline recursive
 
 : 1each ( ... x quot: ( ... x -- ... val ) -- ... val )
-  over function? [ drop f function-unexpected ] when
   over array? [ map ] [ call ] if
 ; inline
 
@@ -187,11 +186,9 @@ DEFER: apply
 ;
 
 : where ( x -- val )
-  dup function? [ f function-unexpected ] when
-  listify
-  [ over number?
-    [ <repetition> >array ]
-    [ f scalar-expected ] if ] map-index concat
+  dup function? [ f function-unexpected ] when listify
+  [ over number? [ <repetition> >array ] [ f scalar-expected ] if ] map-index
+  concat
 ;
 
 <<
@@ -199,12 +196,12 @@ SYNTAX: P[  ! ]
   scan-number
   [ suffix parse-quotation ]
   [ { [ drop ] [ first-unsafe ] [ first2-unsafe swap ] [ first3-unsafe spin ] }
-    nth ] bi prepend >quotation suffix!
+    nth ] bi prepose suffix!
 ;
 
 SYNTAX: TRIG:
   [ [ dup unclip ch>upper prefix , 1 ,
-      parse-word 1quotation [ first ] prepose >quotation ,
+      parse-word 1quotation [ 1scalar ] curry [ first ] prepose ,
     ] { } make suffix
   ] ";" swap each-token
 ;
@@ -216,7 +213,7 @@ MACRO: primitives ( -- table )
     { ' - P[ 1 [ neg ] 1scalar ] }
     { ' + P[ 2 [ + ] 2scalar ] }
     { ' * P[ 2 [ * ] 2scalar ] }
-    ! { ' % P[ 1 [ [ divide-by-zero ] [ recip ] if-zero ] 1scalar ] }
+    { ' % P[ 1 [ [ divide-by-zero ] [ recip ] if-zero ] 1scalar ] }
     { ' { P[ 2 [ max ] 2scalar ] }
     { ' } P[ 2 [ min ] 2scalar ] }
     { ' _ P[ 1 [ floor >integer ] 1scalar ] }
