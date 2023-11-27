@@ -47,7 +47,7 @@ there is also `x F/` fold, that builds up a value by calling the function F betw
 4 5+ 6+ 2+ 1+   .. 18
 4 5 6 2 1 , +/  .. 18
 ```
-numbers are functions that index into lists. these indices are cylic, so `1-` gets the last element
+numbers are functions that index into lists. these indices are cylic, so `1-` gets the last element. (there are no character literals, but `"$"0` does the job fine)
 ```
 0 1 4 9 16 25 , 4   .. 16
 3 9 ,  5 4 ,  , 1 0 .. 5

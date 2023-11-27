@@ -30,6 +30,7 @@ ERROR: scalar-expected x y ;
 ERROR: divide-by-zero ;
 
 ERROR: primitive-error ctx args symbol err ;
+ERROR: variable-undefined name ;
 
 UNION: val   number array func lambda ;
 
@@ -233,8 +234,8 @@ MACRO: primitives ( -- table )
     { ' ' P[ 2 [ apply ] curry 1each ] }
     { ' | P[ 3 [ 2apply ] curry 2each ] }
     { ' @ P[ 2 nip ] }
-    { ' / P[ 2 listify [ unclip ] dip [ 2apply ] curry reduce ] }
-    { ' \ P[ 2 listify [ unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
+    { ' / P[ 2 [ listify unclip ] dip [ 2apply ] curry reduce ] }
+    { ' \ P[ 2 [ listify unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
     { ' $ P[ 1 ] }
     { ' ? P[ 1 where ] }
     { "Pow"   P[ 2 [ ^ ] 2scalar ] }
@@ -253,7 +254,7 @@ MACRO: prim-impl-case ( table -- cond-thing )
 HINTS: prim-impl { hashtable array fixnum } { hashtable array string } ;
 
 MACRO: get-arity-case ( table -- cond-thing )
-  [ first2 1quotation 2array ] map [ no-case ] swap case>quot ;
+  [ first2 1quotation 2array ] map [ variable-undefined ] swap case>quot ;
 : get-arity ( func -- return ) primitives get-arity-case ;
 
 : resolve ( ctx name -- ctx val/f )
@@ -303,7 +304,7 @@ M: func pprint*
 ;
 
 M: closure pprint*
-  f <inset "(" text [ name>> text "," text ] [ def>> fmt-parens ] bi
+  f <inset "(" text [ name>> text "." text ] [ def>> fmt-parens ] bi
   ")" text block>
 ;
 
