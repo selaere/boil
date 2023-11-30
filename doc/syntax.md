@@ -7,7 +7,7 @@ identifiers can be either:
 - one or more lowercase ascii letters (`pow`)
 - another non-ascii symbol (`↑`)
 
-note that mixing case in a single identifier is not allowed: i.e. `xPowOut` is parsed as `x` then `Pow` then `Out`. for this reason i tend to name functions in uppercase and values in lowercase (though every value can act as a function), so that they can be applied by writing them next to each other, instead of `x pow out` (adding one more precedence level) or `x$pow$out` (ugly).
+note that mixing case in a single identifier is not allowed: i.e. `xPowOut` is parsed as `x` then `Pow` then `Out`. for this reason i tend to name functions in uppercase and values in lowercase (though every value can act as a function), so that they can be applied by writing them next to each other, instead of `x pow out` (adding one more precedence level) or `x]pow]out` (ugly).
 
 ## number literals
 one or more ascii digit, then an optional decimal part. the decimal part is a dot `.` and then one or more ascii digits.

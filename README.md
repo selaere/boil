@@ -29,12 +29,12 @@ you can use `;` (concatenate) or `!` (iota) to build lists. strings are lists of
 5!            .. { 0 1 2 3 4 }
 "hello"       .. { 72 69 76 76 79 }
 ```
-or use `,` as special syntax, that takes all expressions in the same depth and puts them in a list
+or use list literals. `,` takes all expressions in the same depth and puts them in a list:
 
 ```
 1 2 3 ,                 .. { 1 2 3 }
 1 2 3 ,  4 5 6 ,  ,     .. { { 1 2 3 } { 4 5 6 } }
-1 2; 3; ]  4; 5; 6; ] ; .. { { 1 2 3 } { 4 5 6 } }
+1 2; 3; $  4; 5; 6; $ ; .. { { 1 2 3 } { 4 5 6 } }
 ```
 
 mathematical operations pervade into lists:
@@ -80,7 +80,7 @@ still, boil has a bunch of combinators you can use to avoid writing lambdas. her
 
 | name | usage | result | letter |
 | --: | --: | --- | ---
-| id | `x$` | `x` | I
+| id | `x]` | `x` | I
 | thrush | `F x[` | `xF` | T = CI
 | swap | `` x  y F` `` | `y xF` | C
 | self | `x F^` | `x xF` | W
@@ -157,10 +157,9 @@ more things:
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x$</code></td>
-<td>id</td>
+<td>wrap</td>
 <td><pre>
-1$   .. 1
-2 -$ .. -2
+3 4 5 ,$ .. { { 3 4 5 } }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x%</code></td>
@@ -180,7 +179,7 @@ more things:
 <td align="right"><code>x f'</code></td>
 <td>each</td>
 <td><pre>
-3 1 2 , !' .. { { 0 1 2 } { 0 } { 0 1 } }
+3 1 2 ,!' .. { { 0 1 2 } { 0 } { 0 1 } }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x y*</code></td>
@@ -204,8 +203,8 @@ more things:
 <td align="right"><code>x f/</code></td>
 <td>fold</td>
 <td><pre>
-2 3 4 , +/ .. 9
-2 3 4 , */ .. 24
+2 3 4 ,+/ .. 9
+2 3 4 ,*/ .. 24
 1 2 ,  3 4 ,  5 6 ,  ,  ;/  ..  { 1 2 3 4 5 6 }
 </pre></td></tr><tr></tr>
 <tr>
@@ -213,14 +212,14 @@ more things:
 <td>compose</td>
 <td><pre>
 "cats"  # !:    .. { 0 1 2 3 }
-1 2 3 , 1(- +:) .. { 0 1 2 }
+1 2 3 ,1(- +:) .. { 0 1 2 }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x y;</code></td>
 <td>concat</td>
 <td><pre>
 1 2 3 ,   4 5 6 ,;    .. { 1 2 3 4 5 6 }
-1 2 3 ,]  4 5 6 ,] ;  .. { { 1 2 3 } { 4 5 6 } }
+1 2 3 ,$  4 5 6 ,$ ;  .. { { 1 2 3 } { 4 5 6 } }
 1 2;                  .. { 1 2 }
 1  2 3 4 ,;           .. { 1 2 3 4 }
 1 2 3 , 4;            .. { 1 2 3 4 }
@@ -271,9 +270,10 @@ more things:
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x]</code></td>
-<td>wrap</td>
+<td>id</td>
 <td><pre>
-3 4 5 , ] .. { { 3 4 5 } }
+1]   .. 1
+2 -] .. -2
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x f^</code></td>

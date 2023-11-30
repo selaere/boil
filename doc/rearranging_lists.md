@@ -14,20 +14,20 @@ easy:
 ```
 "one" "two"(y.x. x y ,) .. { "one" "two" }
 ```
-i can even make it tacit if you want. `,` is very much not a function, but if i combine `]` and `;`...
+i can even make it tacit if you want. `,` is very much not a function, but if i combine `$` and `;`...
 ```
-"one" "two"y.x. x] y];        .. { "one" "two" }
-"one" "two"y.x. x] y(] ;:)    .. { "one" "two" }
-"one" "two"y.x. x] y(] ;:)    .. { "one" "two" }
-"one" "two"y. ] y(] ;:):      .. { "one" "two" }
-"one" "two"y. y(] ;:) ](:`)   .. { "one" "two" }
-"one" "two"(] ;:  ] :` :)     .. { "one" "two" }
+"one" "two"y.x. x$ y$;        .. { "one" "two" }
+"one" "two"y.x. x$ y($ ;:)    .. { "one" "two" }
+"one" "two"y.x. x$ y($ ;:)    .. { "one" "two" }
+"one" "two"y. $ y($ ;:):      .. { "one" "two" }
+"one" "two"y. y($ ;:) $(:`)   .. { "one" "two" }
+"one" "two"($ ;:  $ :` :)     .. { "one" "two" }
 ... or otherwise
-"one" "two"y.x. x] y];        .. { "one" "two" }
-"one" "two"y. ] y];:          .. { "one" "two" }
-"one" "two"y. y];: ][         .. { "one" "two" }
-"one" "two"(] ; : ][ ,:/)     .. { "one" "two" }
-"one" "two"(] ;: :: ][:)      .. { "one" "two" }
+"one" "two"y.x. x$ y$;        .. { "one" "two" }
+"one" "two"y. $ y$;:          .. { "one" "two" }
+"one" "two"y. y$;: $[         .. { "one" "two" }
+"one" "two"($ ; : $[ ,:/)     .. { "one" "two" }
+"one" "two"($ ;: :: $[:)      .. { "one" "two" }
 ```
 woa that's ugly. i would rather write the non-tacit one. isn't there another way?
 
@@ -39,15 +39,14 @@ aha! so we can do this:
 ```
 "one" "two"(y.x.x y.x.y ,)
 ```
-these are two common combinators. the second is the definition of `@`, and the first may be written as `$@` or `` @` `` (just the flipped version of `@`).
+these are two common combinators. the second is the definition of `@`, and the first may be written as `]@` or `` @` `` (just the flipped version of `@`).
 ```
 "one" "two"(@` @;)    .. { "one" "two" }
-"one" "two"($@ @;)    .. { "one" "two" }
-"one" "two"($@ @$ ,)  ...funnier alternative
+"one" "two"(]@ @;)    .. { "one" "two" }
 ```
 it might be a little strange how this still works even when we're being passed two arguments. if we see the partially evaluated version, this becomes more clear:
 ```
-"two"($@ @;)  .. { $ ( "two" @ ) }
+"two"(]@ @;)  .. { ] ( "two" @ ) }
 ```
 now, the two elements are the identity (so the next argument will go there) and a constant argument (from the previous argument.)
 
@@ -63,13 +62,13 @@ but this only works if the elements inside are scalars. it will flatten the list
 ```
 we can make this work by prepending an empty list, and enclosing the list when concatenating:
 ```
-"cat" "dog" "fox" ,  0!] ;`  (b.a. b] a;)/    .. { "fox" "dog" "cat" }
-"cat" "dog" "fox" ,  0!] ;`  (b.a.  a b] ;`)/ .. { "fox" "dog" "cat" }
-"cat" "dog" "fox" ,  0!] ;`  ] ;`: /          .. { "fox" "dog" "cat" }
+"cat" "dog" "fox" ,  0!$ ;`  (b.a. b$ a;)/    .. { "fox" "dog" "cat" }
+"cat" "dog" "fox" ,  0!$ ;`  (b.a.  a b$ ;`)/ .. { "fox" "dog" "cat" }
+"cat" "dog" "fox" ,  0!$ ;`  $ ;`: /          .. { "fox" "dog" "cat" }
 ```
 or easier, wrapping each element in a singleton:
 ```
-"cat" "dog" "fox" , ]' ;`/    .. { "fox" "dog" "cat" }
+"cat" "dog" "fox" , $' ;`/    .. { "fox" "dog" "cat" }
 ```
 
 there's an easier way, by using the domain:
@@ -128,9 +127,9 @@ neat. but what if we have a table like this?
 ```
 oh! it got flattened! hardly surprising. `;` is quite prone to flattening. let's wrap every cell. using two eaches `F''` means that it will wrap cells deeper:
 ```
-"cat" "cog" ,  "dat" "dog" ,  ,]''  ;|/    .. { { "cat" "dat" } { "cog" "dog" } }
+"cat" "cog" ,  "dat" "dog" ,  ,$''  ;|/    .. { { "cat" "dat" } { "cog" "dog" } }
 ```
-therefore, `]'' ;|/:`
+therefore, `$'' ;|/:`
 ## windows
 get overlapping windows of a list of a length n. like this!
 ```
@@ -168,8 +167,10 @@ removing the other though, is a pain. you can see it's used multiple times, and 
 ```
 n. # n~+: !: n!+': ^
 n.  n~+  # :`  !:  n!+':  ^
-n. n(~  +  # :`  !:  ,  :/) n(!+':, :/) ^         .. this is really a S combinator
-n. n n(~  +  # :`  !:  ,  :/  !+':, :/ ` :)   ^   .. insert the !+':. :/ ` into the list
-~  +  # :`  !:  !+':, :/ `  ,  :/  ^  ^:          .. woa that is two ^s
+n. n(~  +  # :`  !:  ,:/) nX.X!+': ^         .. this is really a S combinator
+n. n n(~  +  # :`  !:  ,:/  x.x!+': ` :)   ^ .. insert the !+':. :/ ` into the list
+~  +  # :`  !:  x.x!+': `  ,:/  ^  ^:        .. woa that is two ^s
+~  +  # :`  !:  !+':, :/ `  ,:/  ^  ^:       .. i guess x.x counts as a lambda
+
 ```
 but don't bother.

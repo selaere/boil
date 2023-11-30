@@ -108,7 +108,7 @@ DEFER: read-at-depth
 ;
 
 : read-at-depth ( tokens depth -- tokens expr )
-  [ dup empty? [ CHAR: $ prim boa ] [ unclip token>> ] if ]
+  [ dup empty? [ CHAR: ] prim boa ] [ unclip token>> ] if ]
   [| d | 0 <vector> swap
     [ dup ?first [ depth>> d < ] ?call ]
     [ dup ?first [ token>> ] ?call dup ',' =
@@ -223,7 +223,8 @@ MACRO: primitives ( -- table )
     { ' < P[ 2 [ < bool ] 2scalar ] }
     { ' > P[ 2 [ > bool ] 2scalar ] }
     { ' & P[ 2 equal bool ] }
-    { ' ] P[ 1 1array ] }
+    { ' $ P[ 1 1array ] }
+    { ' ] P[ 1 ] }
     { ' ; P[ 2 [ listify ] bi@ append ] }
     { ' : P[ 3 [ apply ] dip apply ] }
     { ' ` P[ 3 swapd 2apply ] }
@@ -236,7 +237,6 @@ MACRO: primitives ( -- table )
     { ' @ P[ 2 nip ] }
     { ' / P[ 2 [ listify unclip ] dip [ 2apply ] curry reduce ] }
     { ' \ P[ 2 [ listify unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
-    { ' $ P[ 1 ] }
     { ' ? P[ 1 where ] }
     { "Pow"   P[ 2 [ ^ ] 2scalar ] }
     { "pi"    P[ 0 pi ] }

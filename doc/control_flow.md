@@ -1,13 +1,13 @@
 ## choice
-there is definitely more than one way of executing a different function based on a value. but the easiest way is to have a list with functions, and index into it. you can write it either with concatenation `;` (which treats functions as scalars, you don't have to enclose `]` them) or with list literals `f g h ,`.
+there is definitely more than one way of executing a different function based on a value. but the easiest way is to have a list with functions, and index into it. you can write it either with concatenation `;` (which treats functions as scalars, you don't have to enclose `$` them) or with list literals `f g h ,`.
 
-making the absolute number is just picking from `$-,` (or `$ -;`) based on the sign of the value:
+making the absolute number is just picking from `]-,` (or `] -;`) based on the sign of the value:
 
 ```
-5-  n.   n   $-,  n 0<  .. => 5
-5-  n.  n  n 0< $-,[    .. using thrush `[`:
-5-  0< $-,[: ^          .. and then ^ify
-5-  $-, 0<` ^           .. shorter, weirder alternative
+5-  n.   n   ]-,  n 0<  .. => 5
+5-  n.  n  n 0< ]-,[    .. using thrush `[`:
+5-  0< ]-,[: ^          .. and then ^ify
+5-  ]-, 0<` ^           .. shorter, weirder alternative
 5-  ! #:                .. >:)
 ```
 
@@ -19,11 +19,11 @@ bounded-length iteration is pretty easy. try using `!` (iota), `'` (each) and `/
 
 repeating a single function multiple times can be done in multiple ways. knowing that `n?` for a scalar n returns a list of zeroes of length n:
 ```
-21  3 ]f.n. f n? :/    .. doesn't work for n=0
-21  3 ]f.n. f n? $; :/ .. append identity element
-21  3 ]f.n. f n? ; $/: .. or if we're adding an identity element anyways..
-21  3 ]f.n. n?; f@/:   .. ignoring the zeroes added by `?` with `@`
-21  3 ](? ;:: $/::: `) .. #3 tacit (quite ugly)
+21  3 $f.n. f n? :/    .. doesn't work for n=0
+21  3 $f.n. f n? ]; :/ .. append identity element
+21  3 $f.n. f n? ; ]/: .. or if we're adding an identity element anyways..
+21  3 $f.n. n?; f@/:   .. ignoring the zeroes added by `?` with `@`
+21  3 $(? ;:: ]/::: `) .. #3 tacit (quite ugly)
 
 .. { { { 21 } } }
 ```
@@ -65,27 +65,27 @@ it works! let's shorten it now. see that the term `X. (v v XX)F` is used twice:
 ```
 F. X.(v. v XX)F A.AA  Z.
 ```
-we see this kind of self-application twice, that can be written as `$^`
+we see this self-application twice, that can be written as `]^` or `[^`
 ```
-F. X.(v.  v  X $^)F $^  Z.
+F. X.(v.  v  X ]^)F ]^  Z.
 ```
-now, getting rid of the `v.  v  X $^` is actually a bit tricky. i have a trick up my sleeve. see how ``` f`` ``` does nothing, it swaps the two arguments twice, but now it has two take two elements? this is the same as the eta-expansion we needed earlier!
+now, getting rid of the `v.  v  X ]^` is actually a bit tricky. i have a trick up my sleeve. see how ``` f`` ``` does nothing, it swaps the two arguments twice, but now it has two take two elements? this is the same as the eta-expansion we needed earlier!
 ```
-F. X.(X`` $^)F $^  Z.
+F. X.(X`` ]^)F ]^  Z.
 ```
 and if we make it fully tacit, 
 ```
-F. (` `: $^ F) $^
-F. (F  ` `: $^: :`) $^
-F.  F  ` `: $^: :` $^:
+F. (` `: ]^ F) ]^
+F. (F  ` `: ]^: :`) ]^
+F.  F  ` `: ]^: :` ]^:
 ```
 we get this symbol soup,
 ```
-` `: $^: :` $^:  Z.
+` `: ]^: :` ]^:  Z.
 ```
 let's try it!
 ```
-    5   (L.n.  1-+ L: *: ^ 1@;  n 2<  n[)  ` `: $^: :` $^:
+    5   (L.n.  1-+ L: *: ^ 1@;  n 2<  n[)  ` `: ]^: :` ]^:
 120
 ```
 yay !!
@@ -93,6 +93,6 @@ yay !!
 though if we're applying it directly to a lambda, it might be better to do something like this (note the duplicated `L`):
 
 ```
-    5  (L.n.  1-+ LL: *: ^ 1@;  n 2<  n[)`` $^
+    5  (L.n.  1-+ LL: *: ^ 1@;  n 2<  n[)`` ]^
 120
 ```

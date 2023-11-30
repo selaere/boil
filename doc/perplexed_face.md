@@ -19,11 +19,11 @@ but now the syntax tree leans right, so we need more parentheses or spacing when
 f    g   h  i j: :  :   :
 ```
 
-composition also has an identity element (appropiately, the identity function, `$`), so we could do this as well,
+composition also has an identity element (appropiately, the identity function, `]`), so we could do this as well,
 ```
-$ f: g: h: i:
+] f: g: h: i:
 ```
-now every function is composed to the same `$`. this might be a bit clearer, but i don't love it.
+now every function is composed to the same `]`. this might be a bit clearer, but i don't love it.
 
 my preferred solution is using another feature in the language. list literals! `1 2 3 ,` results in a list with the numbers { 1 2 3 }. this works for any value, so `f g h ,` is indeed a list with the functions { f g h }.
 
@@ -69,7 +69,7 @@ so if we have a list, we can just perplex for each (`'`) element:
 note that this will not work for empty arrays. we can append an identity to the reduction to make it work for any length:
 
 ```
-2 3 4 ,!   0!  $; :/:   .. { { { 0 1 2 3 } { 4 5 6 ...
+2 3 4 ,!   0!  ]; :/:   .. { { { 0 1 2 3 } { 4 5 6 ...
 ```
 
 look! a DOUBLE perplexed face `:/:`. you don't see that every day!
