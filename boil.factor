@@ -130,7 +130,9 @@ DEFER: read-at-depth
   swap length 1 + read-at-depth nip
 ;
 
-: parse ( code -- tokens ) read-tokens drop read-expr ;
+: parse ( code -- tokens )
+  dup "#!" head? [ [ ' \n = not ] cut-some-while drop ] when
+  read-tokens drop read-expr ;
 
 : fmt-parens ( expr -- )
   { { [ dup fcall?  ] [
@@ -242,7 +244,8 @@ MACRO: primitives ( -- table )
     { "pi"    P[ 0 pi ] }
     { "Write" P[ 1 write { } ] }
     { "Print" P[ 1 print { } ] }
-    { "Out"   P[ 1 ... { } ] }
+    { "Out"   P[ 1 dup ... ] }
+    { "input" P[ 0 read-contents >array ] }
     TRIG: sin cos tan asin acos atan sqrt round exp ln ;
   } 1quotation
 ;
@@ -323,11 +326,12 @@ M: primitive-error error.
   [ "    " has-readline?
     [ flush readline ] [ write flush "\n" read-until drop ] if
     [ dup ")q" head? [ "bye" print 0 exit ] when
-    [ boil . ] [ print-error drop ] recover ] unless-empty t
+      [ boil . ] [ print-error drop ] recover ] unless-empty t
   ] loop
 ;
 : main ( -- )
-  command-line get ?first [ repl f ] unless* utf8 file-contents boil ...
+  command-line get ?first [ repl f ] unless* utf8 file-contents boil
+  dup { [ array? ] [ empty? ] } 1&& [ drop ] [ ... ] if
 ;
 
 MAIN: main

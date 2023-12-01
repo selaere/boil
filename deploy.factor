@@ -2,7 +2,7 @@ USING: tools.deploy.config ;
 H{
     { deploy-console? t }
     { deploy-io 3 }
-    { deploy-reflection 3 }
+    { deploy-reflection 4 }
     { deploy-ui? f }
     { deploy-word-defs? f }
     { deploy-threads? t }

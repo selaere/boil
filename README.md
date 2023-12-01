@@ -325,19 +325,15 @@ more things:
 * `xSin` `xCos` `xTan` `xAsin` `xAcos` `xAtan` `xSqrt` `xRound` `xExp` `xLn` do exactly what you expect them to do
 * `b nPow` is b to the power of n
 * `pi` is pi
+* `input` gets all the input from stdin until eof
 * `sWrite` writes a string to stdout
 * `sPrint` writes a string to stdout with a trailing newline
-* `xOut` prettyprints x
+* `xOut` prettyprints x and returns x
 
 ## uncertain
-how do multiline files ?
-- i want to do something smart with indentation, to go along with the spacing-based precedence, but i'm not sure exactly how that would work
-
 how 2 sort?
 - implementing one is definitely possible, but unwieldy
 - `Grade^` would be very nice
-
-unbounded recursion is non-trivial. fixed-point combinators?
 
 identifiers with numbers would be cool i think
 

@@ -1,0 +1,24 @@
+#!/usr/bin/env boil
+
+  l.                  .. l = line characters
+    1- l; 1+ s.       .. s = line start
+    s-  l +|  !'  s+
+  Perm. 
+  10= ?: Perm: ^
+Lines.
+
+"0:"  ><, ]|  }/:      Digit.
+0 1-;  10 1 ,* :  +/:  Cal.
+
+Lines  Digit ?: ^ "0"0-+: Cal: ' :  +/:
+Parti.
+
+"one" "two" "three" "four" "five" "six" "seven" "eight" "nine" ,names.
+  x.  names  x= 1;: }/: '  names #' x#> ~ *  ?  1+  x0 x0Digit? "0"-+ ;
+Startno.
+
+# !: (d. d ;`/ 1+ !' d+): ^ Suffixes.
+  Lines  Suffixes Startno': ;/: Cal: ' :  +/:
+Partii.
+
+input PartiPartii, Out' 0!
