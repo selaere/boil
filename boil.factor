@@ -44,7 +44,9 @@ UNION: val   number array func lambda ;
   negate [ 1 -rot find-from drop ] keepd [ length or ] keep swap cut-slice swap
 ; inline
 
-CONSTANT: +subscripts+ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔₕₖₗₘₙₚₛₜᵢᵣᵤᵥⱼᵦᵧᵨᵩᵪ"
+: continuation-letter ( chr -- ? )
+  { [ ascii:letter? ] [ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔₕₖₗₘₙₚₛₜᵢᵣᵤᵥⱼᵦᵧᵨᵩᵪ" member? ] } 1||
+;
 
 : readtoken ( src -- src' token )
   dup ?first
@@ -53,10 +55,10 @@ CONSTANT: +subscripts+ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒ�
     { [ dup ' \n = ] [ drop nothing ] }
     { [ dup not ] [ drop f ] }
     { [ dup ascii:digit? ]
-      [ drop [ [ ascii:digit? ] [ ' . = ] bi or ] cut-some-while
+      [ drop [ { [ ascii:digit? ] [ ' . = ] } 1|| ] cut-some-while
         dec> numlit boa ] }
     { [ dup ascii:Letter? ]
-      [ drop [ [ ascii:letter? ] [ +subscripts+ member? ] bi or ] cut-some-while
+      [ drop [ continuation-letter ] cut-some-while
         over ?first ' . = 
         [ [ rest-slice ] dip >string vardot boa ]
         [ >string ident boa ] if ] }
@@ -104,17 +106,18 @@ DEFER: read-at-depth
   [ [ 0 <hash-set> tuck capture ] [ over delete ] bi* ] 2keep lambda boa
 ;
 : read-lambda ( tokens name -- tokens lambda )
-  [ rest-slice dup first depth>> 1 + read-at-depth ] dip make-lambda
+  [ dup first depth>> 1 + read-at-depth ] dip make-lambda
 ;
 
 : read-at-depth ( tokens depth -- tokens expr )
-  [ dup empty? [ CHAR: ] prim boa ] [ unclip token>> ] if ]
+  [ dup empty?
+    [ CHAR: ] prim boa ]
+    [ unclip token>> dup vardot? [ inner>> read-lambda ] when ] if ]
   [| d | 0 <vector> swap
     [ dup ?first [ depth>> d < ] ?call ]
     [ dup ?first [ token>> ] ?call dup ',' =
       [ drop [ 1vector ] dip rest-slice ]
-      [ dup vardot? [ inner>> read-lambda ] [ drop d 1 - read-at-depth ] if
-        swap [ suffix ] dip ]
+      [ drop d 1 - read-at-depth swap [ suffix ] dip ]
       if
     ] do while swap
     unclip [ fcall boa ] reduce

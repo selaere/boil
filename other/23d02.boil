@@ -1,0 +1,22 @@
+#!/usr/bin/env boil
+
+# !: 1+: ^ Rotl.
+
+# -: 2+: !: ^
+  " "0= {\: ~: ?: ^ "0"0-+:  10* +: ` / : 
+    " "0= ?: 1+: ^ 0: "rgb"=: *: ` : ^: ::
+  ' +/::
+Reveal.
+
+Rotl ?: 1+:   l. 0 l; s. s- l+ !' s+  :   Split.
+10 ":"; =' {/:  = ~:: \ :  ?:  ^                   .. ": 3 red, 42 blue"
+  " "0=  = ~:: \ :  0 ;` >: ^ :  Rotl:  Split:  ^  .. { ": 3 red" ", 42 blue" }
+  0 ":"0=: ' Split: ^                              .. split games
+  0 ","0=: ~: ' Split: ^ Reveal': '                .. split and sum up reveals
+  ,:/
+Parse.
+
+12 13 14 ,> ~: }/: ' }/: ' ?: 1+: +/:  Parti.
+{/ */: ' +/:                           Partii.
+
+inputParse PartiPartii, Out' 0!

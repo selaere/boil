@@ -2,9 +2,9 @@
 
   l.                  .. l = line characters
     1- l; 1+ s.       .. s = line start
-    s-  l +|  !'  s+
-  Perm. 
-  10= ?: Perm: ^
+    s- l+ !' s+
+  perm. 
+  10= ?: perm: ^
 Lines.
 
 "0:"  ><, ]|  }/:      Digit.
