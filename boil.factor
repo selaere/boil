@@ -323,7 +323,7 @@ M: primitive-error error.
   err>> error.
 ;
 
-: boil-with ( string ctx -- value ) swap parse eval nip ;
+: boil-with ( ctx string -- ctx value ) parse eval ;
 : boil ( string -- value ) 0 <hashtable> boil-with ;
 
 : repl-command ( ctx cmd -- ctx )
@@ -331,10 +331,12 @@ M: primitive-error error.
     { [ dup "." tail? ]
       [ but-last-slice dup [ continuation-letter not ] find-last
         { [ ascii:LETTER? not ] [ ascii? ] } 1&& [ 1 + ] when
-        cut-slice [ over boil-with ] [ >string ] bi* pick set-at ] }
+        cut-slice [ boil-with ] [ >string ] bi* pick set-at ] }
     { [ dup ")v" head? ] [ drop dup keys . ] }
-    { [ dup ")s" head? ] [ 3 tail-slice over boil-with [ dup [ number? ] all? [ >string ] when ] deep-map . ] }
-    [ over boil-with . ] } cond
+    { [ dup ")s" head? ]
+      [ 3 tail-slice boil-with 
+        [ dup [ number? ] all? [ >string ] when ] deep-map . ] }
+    [ boil-with . ] } cond
 ;
 : repl ( -- x )
   0 <hashtable> clone
