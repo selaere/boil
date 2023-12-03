@@ -1,3 +1,66 @@
+iota `!` and where `?` are two pretty common functions when working with lists. at first they seem a bit abstract. their names aren't very enlightening at least.
+
+```
+4! .. { 0 1 2 3 }          okay?
+7! .. { 0 1 2 3 4 5 6 }    that's not very interesting
+0 1 2 3 4 ,?    .. { 1 2 2 3 3 3 4 4 4 }    what would i need that for ?
+0 1 0 0 1 1 ,?  .. { 1 4 5 }                huh
+```
+these are already useful in their own. you can use `?` to get the first index of an item in a list like:
+```
+3 4 2 5 1 7 8 ,5= ? 0  .. 5
+```
+but they are mostly useful because of the meaning boil gives lists of numbers when used as functions. a list of indices applied to a list selects, or indexes, or applies a permutation.
+```
+"0abcdef"  3 0 6 6 5 5 ,  .. "c0ffee"
+```
+now you can see how playing around with the lists given by `!` can be useful for shuffling items around, and `?` can be useful for removing or replicating items.
+
+now remember that, because of currying, a function `F` being applied to `x` and `y` is the same as the result of applying `F` to `x` being applied to `y`. this means that `!` and `?` have alternative meanings when applied with two arguments.
+
+
+now we have functions that are, as i say, _accidentally ambivalent_. it's pretty common in the APL world to have functions that mean different things depending on how many arguments they are given, but this is something that we can't do with currying: but these two functions are _the same thing_ due to how application works.
+
+|usage | names               | example
+| ---: | ------------------- | -------
+|  `x!`|iota, range          |`5! .. { 0 1 2 3 4 }`
+|`x y!`|reshape, take, prefix|`"beefeater" 3! .. "bee"`
+|  `x?`|where, indices       |`0 1 0 1 2 ,? .. { 2 4 5 5 }`
+|`x y?`|replicate, mask      |`"bevel"  1 1 0 1 0 ,?  .. "bee"`
+
+look! that `?` is just a filter!
+```
+9 1 2 3 8 4 7 2 4 9 ,x.  x  x 5< ?  .. { 1 2 3 4 2 4 }
+```
+
+iota is expanded to be useful when used with two arguments. defining iota for a negative argument is not obvious, but if we define it like this:
+```
+5-! .. { -5 -4 -3 -2 -1 }
+```
+then a negative argument takes from the right:
+```
+"beetlejuice" 5-!  .. "juice"
+```
+in the same way, we can define iota for lists of integers as outputting a nested list with that shape:
+```
+    3 4 2 ,!
+{
+    { { 0 1 } { 2 3 } { 4 5 } { 6 7 } }
+    { { 8 9 } { 10 11 } { 12 13 } { 14 15 } }
+    { { 16 17 } { 18 19 } { 20 21 } { 22 23 } }
+}
+```
+and then we get something that works like APL's reshape:
+```
+    )s "CoNiCuZnRhPdAgCdIrPtAuHg"  3 4 2 ,!
+{
+    { "Co" "Ni" "Cu" "Zn" }
+    { "Rh" "Pd" "Ag" "Cd" }
+    { "Ir" "Pt" "Au" "Hg" }
+}
+```
+anyways here are some useful definitions of common list operations
+
 ## rotate
 
 we've seen this already

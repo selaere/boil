@@ -29,7 +29,7 @@ you can use `;` (concatenate) or `!` (iota) to build lists. strings are lists of
 5!            .. { 0 1 2 3 4 }
 "hello"       .. { 72 69 76 76 79 }
 ```
-or use list literals. `,` takes all expressions in the same depth and puts them in a list:
+or use list literals. `,` takes all expressions in the same depth and puts them in a list. lists can be nested, and `x$` wraps x in a 1-element list.
 
 ```
 1 2 3 ,                 .. { 1 2 3 }
@@ -47,10 +47,14 @@ there is also `x F/` fold, that builds up a value by calling the function F betw
 4 5+ 6+ 2+ 1+   .. 18
 4 5 6 2 1 , +/  .. 18
 ```
-numbers are functions that index into lists. these indices are cylic, so `1-` gets the last element. (there are no character literals, but `"$"0` does the job fine)
+all integers are functions that index into lists. these indices are cylic, so `1-` is a function that gets the last element.
 ```
 0 1 4 9 16 25 , 4   .. 16
 3 9 ,  5 4 ,  , 1 0 .. 5
+4 3 2 , 1-          .. 2
+```
+there are no character literals, but `"$"0` does the job fine
+```
 "bees" 4  .. "b"0
 "bees" 1- .. "s"0
 ```
@@ -58,11 +62,11 @@ and when lists are called, they call each element with the same argument:
 ```
 4  1+ - 2* ,  .. { 5 -4 8 }
 ```
-this means that rearranging items is the same as applying a permutation as a function:
+combining both of these properties, by applying a list of integers, we can select those indices to the array. if the list has the same length as the argument and the indices are unique, this is the same as applying a permutation.
 ```
 "catnip"  4 5 6 1 2 3 ,  .. "nipcat"
 ```
-with this, we can implement many useful list operations. rotating a list is as easy as adding a number to the domain (`x#` is length), and calling it with the original array:
+with this we can implement many useful list operations. rotating a list is as easy as adding a number to the domain (`x#` is length), and calling it with the original array:
 ```
 "catnip"  "catnip"#! 2+  .. "tnipca"
 ```

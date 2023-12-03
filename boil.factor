@@ -324,7 +324,7 @@ M: primitive-error error.
 ;
 
 : boil-with ( ctx string -- ctx value ) parse eval ;
-: boil ( string -- value ) 0 <hashtable> boil-with nip ;
+: boil ( string -- value ) 0 <hashtable> swap boil-with nip ;
 
 : repl-command ( ctx cmd -- ctx )
   { { [ dup empty? ] [ drop ] }
