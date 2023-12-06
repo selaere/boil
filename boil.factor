@@ -25,9 +25,10 @@ TUPLE: func    { symbol union{ fixnum string } } { curr array } ;
 : <func> ( symbol -- func ) { } func boa ; inline
 TUPLE: closure { captures hashtable } def { name string } ;
 
-ERROR: function-unexpected x y ;
+ERROR: function-unexpected x ;
 ERROR: scalar-expected x y ;
 ERROR: divide-by-zero ;
+ERROR: empty-list ;
 
 ERROR: primitive-error ctx args symbol err ;
 ERROR: variable-undefined name ;
@@ -163,8 +164,10 @@ DEFER: apply
            { { t f } [ curry map ] } { { f t } [ with map ] } } case
 ; inline recursive
 
+: assert-not-function ( x -- ) dup function? [ drop ] [ function-unexpected ] if ;
+
 : 2scalar ( ... x y quot: ( ... x y -- ... val ) -- ... val )
-  2over [ function? ] either? [ drop function-unexpected ] when
+  2over [ assert-not-function ] bi@
   2over [ array? ] either? [ [ 2scalar ] curry 2each ] [ 2each ] if
 ; inline recursive
 
@@ -173,7 +176,7 @@ DEFER: apply
 ; inline
 
 : 1scalar ( ... x quot: ( ... x -- ... val ) -- ... val )
-  over function? [ drop function-unexpected ] when
+  over assert-not-function
   over array? [ [ 1scalar ] curry map ] [ call ] if
 ; inline recursive
 
@@ -183,7 +186,7 @@ DEFER: apply
 : equal ( x y -- ? ) 2dup [ lambda? ] either? [ eq? ] [ = ] if ;
 
 : iota ( x -- val )
-  dup function? [ f function-unexpected ] when
+  dup assert-not-function
   dup array?
   [ dup [ number? ] all? [ f scalar-expected ] unless
     [ product iota ] [ [ abs ] map rest-slice <reversed> ] bi
@@ -192,10 +195,14 @@ DEFER: apply
 ;
 
 : where ( x -- val )
-  dup function? [ f function-unexpected ] when listify
+  dup assert-not-function listify
   [ over number? [ <repetition> >array ] [ f scalar-expected ] if ] map-index
   concat
 ;
+
+: setup-reduce ( x:xs f -- xs x quot )
+  [ listify [ empty-list ] when-empty unclip ] dip [ 2apply ] curry
+; inline
 
 <<
 SYNTAX: P[  ! ]
@@ -240,8 +247,8 @@ MACRO: primitives ( -- table )
     { ' ' P[ 2 [ apply ] curry 1each ] }
     { ' | P[ 3 [ 2apply ] curry 2each ] }
     { ' @ P[ 2 nip ] }
-    { ' / P[ 2 [ listify unclip ] dip [ 2apply ] curry reduce ] }
-    { ' \ P[ 2 [ listify unclip ] dip [ 2apply ] curry accumulate swap suffix ] }
+    { ' / P[ 2 setup-reduce reduce ] }
+    { ' \ P[ 2 setup-reduce accumulate swap suffix ] }
     { ' ? P[ 1 where ] }
     { "Pow"   P[ 2 [ ^ ] 2scalar ] }
     { "pi"    P[ 0 pi ] }
