@@ -327,15 +327,16 @@ M: primitive-error error.
 : boil ( string -- value ) 0 <hashtable> swap boil-with nip ;
 
 : repl-command ( ctx cmd -- ctx )
-  { { [ dup empty? ] [ drop ] }
+  { { [ dup { [ empty? ] [ ".." head? ] } 1|| ] [ drop ] }
     { [ dup "." tail? ]
       [ but-last-slice dup [ continuation-letter not ] find-last
         { [ ascii:LETTER? not ] [ ascii? ] } 1&& [ 1 + ] when
         cut-slice [ boil-with ] [ >string ] bi* pick set-at ] }
     { [ dup ")v" head? ] [ drop dup keys . ] }
-    { [ dup ")s" head? ]
+    { [ dup ")s " head? ]
       [ 3 tail-slice boil-with 
         [ dup [ number? ] all? [ >string ] when ] deep-map . ] }
+    { [ dup ")p " head? ] [ 3 tail-slice parse (.) ] }
     [ boil-with . ] } cond
 ;
 : repl ( -- x )

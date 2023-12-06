@@ -1,5 +1,5 @@
 ## how to run
-install [factor](https://factorcode.org) and then `rlwrap factor boil.factor` (replace `factor` by whichever name you have factor installed with)
+install [factor](https://factorcode.org) and then `rlwrap factor boil.factor` (replace `factor` by whichever name you have factor installed with). or use `factor-vm -e='"boil" deploy'` to build an executable.
 # boil
 functions are postfix, i.e. `xF` represents calling *F* with *x* as an argument.
 ```
