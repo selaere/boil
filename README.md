@@ -133,6 +133,7 @@ and we can use like this! the syntax for lambdas also works for assignment:
 ```
 
 more things:
+* [combinators](doc/combinators.md)
 * [control flow](doc/control_flow.md) (conditions, iteration, recursion)
 * [perplexed face](doc/perplexed_face.md) `:/`
 * [implementing stuff with lists](doc/rearranging_lists.md)
@@ -340,6 +341,3 @@ how 2 sort?
 - `Grade^` would be very nice
 
 identifiers with numbers would be cool i think
-
-keep state in the repl
-- set variables by having `name.` at the end ?
