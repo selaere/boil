@@ -205,35 +205,32 @@ how can we write that? well, observe that the number of windows of size _n_ for 
 ```
 "beehive"  5 n.l. l# n-+ 1+ .. 3
 ```
-we can make this a little shorter if we see that `n-k+1 = n-(1-k)`, and `1-x` is defined as `~`:
+then use `!` to get the indices where the windows will start,
 ```
-"beehive"  5 n.l. l# n~+ .. 3
-```
-what a useless little golfing trick. then use `!` to get the indices where the windows will start,
-```
-"beehive"  5 n.l. # n~+ ! .. { 0 1 2 }
+"beehive"  5 n.l. # n-+ 1+ ! .. { 0 1 2 }
 ```
 and add `n!` (in this case, { 0 1 2 3 4 }) to each of them,
 ```
-"beehive"  5 n.l. l# n~+ ! n!+' .. { { 0 1 2 3 4 } { 1 2 3 4 5 } { 2 3 4 5 6 } }
+"beehive"  5 n.l. l# n-+ 1+ ! n!+' .. { { 0 1 2 3 4 } { 1 2 3 4 5 } { 2 3 4 5 6 } }
 ```
 aha! we've finished. now just apply this to the original list,
 ```
-"beehive"  5 n.l.l(l# n~+ ! n!+') .. { "beehi" "eehiv" "ehive" }
+"beehive"  5 n.l.l(l# n-+ 1+ ! n!+') .. { "beehi" "eehiv" "ehive" }
 ```
 
 removing one argument from this closure is pretty easy. we see again the pattern of using `^` to rearrange a list in some way:
 ```
-"beehive"  5 n. # n~+: !: n!+': ^ .. { "beehi" "eehiv" "ehive" }
+"beehive"  5 n. # n-+: 1+: !: n!+': ^ .. { "beehi" "eehiv" "ehive" }
 ```
-removing the other though, is a pain. you can see it's used multiple times, and not at the start of the expression, so we have to rearrange and swap a bunch of things. don't bother. i bothered.
+removing the other is a pain. it's used multiple times, and not at the start of the expression, so we have to rearrange and swap a bunch of things. don't bother. i bothered.
 ```
-n. # n~+: !: n!+': ^
-n.  n~+  # :`  !:  n!+':  ^
-n. n(~  +  # :`  !:  ,:/) nX.X!+': ^         .. this is really a S combinator
-n. n n(~  +  # :`  !:  ,:/  x.x!+': ` :)   ^ .. insert the !+':. :/ ` into the list
-~  +  # :`  !:  x.x!+': `  ,:/  ^  ^:        .. woa that is two ^s
-~  +  # :`  !:  !+':, :/ `  ,:/  ^  ^:       .. i guess x.x counts as a lambda
+n. # n-+: 1+: !: n!+': ^
+n.  n-+ 1+:  # :`  !:  n!+':  ^
+n. n(-  +  1+:  # :`  !:  ,:/) nX.X!+': ^        .. this is really a S combinator
+n. n(- 1+:  +  # :`  !:  ,:/) nX.X!+': ^         .. more convenient precedence
+n. n n(- 1+:  +  # :`  !:  ,:/  x.x!+': ` :)   ^ .. insert the !+':. :/ ` into the list
+- 1+:  +  # :`  !:  x.x!+': `  ,:/  ^  ^:        .. woa that is two ^s
+- 1+:  +  # :`  !:  !+':, :/ `  ,:/  ^  ^:       .. i guess x.x counts as a lambda
 
 ```
 but don't bother.

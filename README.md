@@ -1,5 +1,12 @@
 ## how to run
-install [factor](https://factorcode.org) and then `rlwrap factor boil.factor` (replace `factor` by whichever name you have factor installed with). or use `factor-vm -e='"boil" deploy'` to build an executable.
+install [factor](https://factorcode.org) and then either
+* `factor boil.factor` (replace `factor` by whichever name you have factor installed with),
+* or place boil in your work folder and `"boil" deploy`,
+* or if you dont know what that means,
+  ```sh
+  git clone https://github.com/selaere/boil
+  factor -e='"." add-vocab-root "boil" deploy'  # run outside the cloned repo
+  ```
 # boil
 functions are postfix, i.e. `xF` represents calling *F* with *x* as an argument.
 ```
@@ -133,12 +140,13 @@ and we can use like this! the syntax for lambdas also works for assignment:
 ```
 
 more things:
-* [combinators](doc/combinators.md)
-* [control flow](doc/control_flow.md) (conditions, iteration, recursion)
-* [perplexed face](doc/perplexed_face.md) `:/`
 * [implementing stuff with lists](doc/rearranging_lists.md)
+  * [sorting](doc/sorting.md) `~`
+* [control flow](doc/control_flow.md) (conditions, iteration, recursion)
+* [combinators](doc/combinators.md)
+* [perplexed face](doc/perplexed_face.md) `:/`
 * [reimplementing scan](doc/reimplementing_scan.md)
-* [syntax](doc/syntax.md) (more detail about how precedence works etc)
+* [syntax](doc/syntax.md) (more details about how precedence works etc)
 
 ## builtins
 <table><tr></tr>
@@ -318,10 +326,11 @@ more things:
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x~</code></td>
-<td>not</td>
+<td>grade</td>
 <td>
-<pre>1 2 0 4 0 5 0 6 , 0= ~ .. { 1 1 0 1 0 1 0 1 }
-1- 0 1 2 3 , ~ .. { 2 1 0 -1 -2 } </pre>
+<pre>
+3 5 1 4 3 2 3 0 ,~  .. { 7 2 5 0 4 6 3 1 }
+3 5 1 4 3 2 3 0 ,~^ .. { 0 1 2 3 3 3 4 5 }</pre>
 </td>
 </table>
 
@@ -335,9 +344,3 @@ more things:
 * `sPrint` writes a string to stdout with a trailing newline
 * `xOut` prettyprints x and returns x
 
-## uncertain
-how 2 sort?
-- implementing one is definitely possible, but unwieldy
-- `Grade^` would be very nice
-
-identifiers with numbers would be cool i think

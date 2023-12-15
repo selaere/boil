@@ -164,7 +164,7 @@ DEFER: apply
            { { t f } [ curry map ] } { { f t } [ with map ] } } case
 ; inline recursive
 
-: assert-not-function ( x -- ) dup function? [ drop ] [ function-unexpected ] if ;
+: assert-not-function ( x -- ) dup function? [ function-unexpected ] [ drop ] if ;
 
 : 2scalar ( ... x y quot: ( ... x y -- ... val ) -- ... val )
   2over [ assert-not-function ] bi@
@@ -204,6 +204,8 @@ DEFER: apply
   [ listify [ empty-list ] when-empty unclip ] dip [ 2apply ] curry
 ; inline
 
+: grade ( x -- x ) [ length <iota> ] keep [ nth ] curry sort-by ;
+
 <<
 SYNTAX: P[  ! ]
   scan-number
@@ -230,7 +232,6 @@ MACRO: primitives ( -- table )
     { ' { P[ 2 [ max ] 2scalar ] }
     { ' } P[ 2 [ min ] 2scalar ] }
     { ' _ P[ 1 [ floor >integer ] 1scalar ] }
-    { ' ~ P[ 1 [ 1 swap - ] 1scalar ] }
     { ' = P[ 2 [ = bool ] 2scalar ] }
     { ' < P[ 2 [ < bool ] 2scalar ] }
     { ' > P[ 2 [ > bool ] 2scalar ] }
@@ -250,6 +251,7 @@ MACRO: primitives ( -- table )
     { ' / P[ 2 setup-reduce reduce ] }
     { ' \ P[ 2 setup-reduce accumulate swap suffix ] }
     { ' ? P[ 1 where ] }
+    { ' ~ P[ 1 listify grade ] }
     { "Pow"   P[ 2 [ ^ ] 2scalar ] }
     { "pi"    P[ 0 pi ] }
     { "Write" P[ 1 write { } ] }
