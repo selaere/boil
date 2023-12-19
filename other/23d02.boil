@@ -11,7 +11,7 @@ Reveal.
 Rotl ?: 1+:   l. 0 l; s. s- l+ !' s+  :   Split.
 10 ":"; =' {/:  = 0=:: \ :  ?:  ^                   .. ": 3 red, 42 blue"
   " "0=  = 0=:: \ :  0 ;` >: ^ :  Rotl:  Split:  ^  .. { ": 3 red" ", 42 blue" }
-  0 ":"0=: ' Split: ^                              .. split games
+  0 ":"0=: ' Split: ^                               .. split games
   0 ","0=: 0=: ' Split: ^ Reveal': '                .. split and sum up reveals
   ,:/
 Parse.

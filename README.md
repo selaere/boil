@@ -142,6 +142,7 @@ and we can use like this! the syntax for lambdas also works for assignment:
 more things:
 * [implementing stuff with lists](doc/rearranging_lists.md)
   * [sorting](doc/sorting.md) `~`
+  * [reading](doc/reading.md) (splitting, parsing numbers)
 * [control flow](doc/control_flow.md) (conditions, iteration, recursion)
 * [combinators](doc/combinators.md)
 * [perplexed face](doc/perplexed_face.md) `:/`
