@@ -72,7 +72,10 @@ TODO: specify and implement how tabs and carriage returns work
 parentheses start a new parsing context with its own whole precedence stuff. the expression inside two matching parentheses `(`-`)` is parsed and replaced by a token with the same precedence before the opening parentheses. the precedence of the first token in the parentheses (spaces after the `(`) or of the closing parentheses (spaces before the `)`) do not matter.
 
 ## comments
-`..` starts a comment that extends until but not including the next line break, or the end of file. [NOT IMPLEMENTED. `(.` starts a comment that ends at the matching parenthesis.] comments are removed when tokenizing, and their precedence is ignored.
+`..` starts a comment that extends until but not including the next line break, or the end of file. `(.` starts a comment that ends at the matching parenthesis. comments are removed when tokenizing, and their precedence is ignored.
+
+## string literals
+a string literal starts and ends with a double quote `"`. all the codepoints between the quotes will be put in a list, including newlines. double quotes are only allowed inside strings when after another quote `""`: in this case, the quote is said to be "escaped", and only one of the quotes is included in the list.
 
 ## list literals
 the token `,` is special in that, instead starting a new expression with a lower precedence, it will aggregate all the terms in the expression into a _list literal_ and continue parsing in the same precedence. representing a list literal `1 2 3 ,` as `[123]`,

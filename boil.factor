@@ -45,6 +45,20 @@ UNION: val   number array func lambda ;
   negate [ 1 -rot find-from drop ] keepd [ length or ] keep swap cut-slice swap
 ; inline
 
+: trim-until-matching ( src -- src' )
+  0 [ dup 0 = ]
+  [ over first { { ' ( [ 1 + ] } { ' ) [ 1 - ] } [ drop ] } case
+    [ rest-slice ] dip ] do until
+  drop
+;
+
+: (cut-string) ( src -- src' str ) [ ' " = not ] cut-some-while swap rest-slice ;
+
+: cut-string ( src -- src' str )
+  (cut-string) [ rest-slice ] dip
+  [ dup first ' " = ] [ (cut-string) [ append ] dip ] while swap
+; 
+
 : continuation-letter ( chr -- ? )
   { [ ascii:letter? ] [ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔₕₖₗₘₙₚₛₜᵢᵣᵤᵥⱼᵦᵧᵨᵩᵪ" member? ] } 1||
 ;
@@ -53,6 +67,7 @@ UNION: val   number array func lambda ;
   dup ?first
   {
     { [ over ".." head? ] [ drop [ ' \n = not ] cut-some-while drop nothing ] }
+    { [ over "(." head? ] [ drop trim-until-matching nothing ] }
     { [ dup ' \n = ] [ drop nothing ] }
     { [ dup not ] [ drop f ] }
     { [ dup ascii:digit? ]
@@ -64,8 +79,8 @@ UNION: val   number array func lambda ;
         [ [ rest-slice ] dip >string vardot boa ]
         [ >string ident boa ] if ] }
     { [ dup ' " = ]
-      [ drop [ ' " = not ] cut-some-while rest-slice 
-        [ numlit boa ] V{ } map-as [ rest-slice ] dip ] }
+      [ drop cut-string
+        [ numlit boa ] V{ } map-as ] }
     { [ dup ' ( = ] [ drop rest-slice '(' ] }
     { [ dup ' ) = ] [ drop rest-slice ')' ] }
     { [ dup ' , = ] [ drop rest-slice ',' ] }
