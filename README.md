@@ -1,4 +1,4 @@
-## how to run
+## how to run/build
 install [factor](https://factorcode.org) and then either
 * `factor boil.factor` (replace `factor` by whichever name you have factor installed with),
 * or place boil in your work folder and `"boil" deploy`,
@@ -8,6 +8,28 @@ install [factor](https://factorcode.org) and then either
   factor -e='"." add-vocab-root "boil" deploy'  # run outside the cloned repo
   ```
 # boil
+is a dynamically typed functional pure-ish language based on untyped lambda calculus blah blah. you know the sort. it is also a minimal<sup>1</sup> vector<sup>2</sup> tacit<sup>3</sup> programming language with postfix<sup>4</sup>, whitespace-based<sup>5</sup> terse<sup>6</sup> syntax
+
+1. there are not a lot of built-in functions (see [primitives](#primitives))
+2. boil values can either be scalars or vectors (which i will from here on just call "lists"). arithmetic operations map to every element in a list.
+3. functions can be defined using combinators like `:` compose or `` ` `` flip, as well as currying for partial evaluation.
+4. `x-` means "minus x". application goes in left-to-right order
+5. spaces are used to regroup things: `ABCD` is `((AB)C)D`, `A  B CD` is `A(B(CD))`. `x yF` calls F with y and x
+6. most built-in are just ascii symbols (these are called "primitives")
+
+### more words
+
+boil is mostly a mix of things i like from other places. in general, a lot of the symbols and primitive design comes from array languages like [K](https://k.miraheze.org/wiki/Main_Page) or [APL](https://aplwiki.com/). boil has no multidimensional arrays, but its lists work a lot like K.
+
+there aren't a lot of applicative languages that do postfix functions ("applicative" here basically means "not stack-based"), but it feels kind of similar to the `|>` pipes in the functional world or `.` method chaining in everywhere else. i think it's a more natural way to think about computation, but it probably doesn't matter that much.
+
+the whitespace-based precedence is similar to [I](https://github.com/mlochbaum/ILanguage), but it's quite different: here functions take one argument before instead of two arguments around. it is also [extended](doc/syntax.md#precedence) to files with newlines in a neat way that lets me use the lambda syntax for assignment. list literals `,` kind of remind me of Lisp quasiquotes? i'm not sure
+
+most array languages have a clear separation of values and functions. we need to call the result of functions anyways, because everything takes one argument, but here boil does something a bit original: a number called with a list indexes it (like K, but the other way around), and a vector called with a value calls that each of those elements with that value (this seems similar to [nial](https://www.nial-array-language.org/)'s atlases, but i haven't looked into it much). this means that some glyphs can become "overloaded": see [rearranging lists](doc/rearranging_lists.md)
+
+i think it could be reasonable as a general-purpose language if some more functions are added. the functions "reverse" and "not" used to be primitives, but i added more stuff and ascii is too small. these are not hard to write out (``$' ;`/`` and `0=`/`- 1+:`), but that's soooo long and also `x 0= 0=` looks so ugly!! unicode identifiers are allowed, so those could become `⌽` and `¬` in some other library of some sort, but i don't really want them to be primitives. TODO add some good way of importing things from other files
+
+## introduction
 functions are postfix, i.e. `xF` represents calling *F* with *x* as an argument.
 ```
 3-    .. -3
@@ -36,7 +58,7 @@ you can use `;` (concatenate) or `!` (iota) to build lists. strings are lists of
 5!            .. { 0 1 2 3 4 }
 "hello"       .. { 72 69 76 76 79 }
 ```
-or use list literals. `,` takes all expressions in the same depth and puts them in a list. lists can be nested, and `x$` wraps x in a 1-element list.
+or use list literals! `,` takes all expressions in the same depth and puts them in a list. lists can be nested, and `x$` wraps x in a 1-element list.
 
 ```
 1 2 3 ,                 .. { 1 2 3 }
@@ -149,7 +171,7 @@ more things:
 * [reimplementing scan](doc/reimplementing_scan.md)
 * [syntax](doc/syntax.md) (more details about how precedence works etc)
 
-## builtins
+## primitives
 <table><tr></tr>
 <tr><th>usage</th><th>name</th><th>example</th></tr>
 <tr>

@@ -54,7 +54,7 @@ this function is stolen straight from apl's `⍋`, and the apl wizards have foun
 ```
 it ranks the elements of the array: the smallest element is marked with a 0, the second smallest with a 1...
 
-`~` is also useful if you want to find the index of the highest or lowest element:
+`~` is also useful if you want to find the index of the greatest or lowest element:
 
 ```
     41 42 13 56 23 73 ,~ 0
