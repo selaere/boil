@@ -1,12 +1,3 @@
-## how to run/build
-install [factor](https://factorcode.org) and then either
-* `factor boil.factor` (replace `factor` by whichever name you have factor installed with),
-* or place boil in your work folder and `"boil" deploy`,
-* or if you dont know what that means,
-  ```sh
-  git clone https://github.com/selaere/boil
-  factor -e='"." add-vocab-root "boil" deploy'  # run outside the cloned repo
-  ```
 # boil
 is a dynamically typed functional pure-ish language based on untyped lambda calculus etc etc. you know the sort. it is also a minimalistic<sup>1</sup> vector<sup>2</sup> tacit<sup>3</sup> programming language with postfix<sup>4</sup>, whitespace-based<sup>5</sup> terse<sup>6</sup> syntax
 
@@ -17,11 +8,19 @@ is a dynamically typed functional pure-ish language based on untyped lambda calc
 5. spaces are used to regroup things: `ABCD` is `((AB)C)D`, `A  B CD` is `A(B(CD))`. `x yF` calls F with y and x
 6. most built-in are just ascii symbols (these are called "primitives")
 
-### [INTROduction](doc/introduction.md)
+### [INTROduction](doc/introduction.md) (that blue thing is a link) (click there)
 it's a sort of tutorial but not really and it's not that long look at it
+## how to run/build
+install [factor](https://factorcode.org) and then, replacing `factor` by whichever name you have factor installed with,
+* `factor boil.factor`,
+* or place boil in your work folder and `"boil" deploy`,
+* or if you dont know what that means,
+  ```sh
+  git clone https://github.com/selaere/boil
+  factor -e='"." add-vocab-root "boil" deploy'  # run outside the cloned repo
+  ```
 
-
-### more things
+## more things
 * [implementing stuff with lists](doc/rearranging_lists.md)
   * [sorting](doc/sorting.md) `~`
   * [reading](doc/reading.md) (splitting, parsing numbers)
