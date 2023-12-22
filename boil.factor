@@ -1,11 +1,10 @@
-USING: accessors arrays ascii assocs combinators
-combinators.short-circuit command-line continuations debugger
-grouping hash-sets hashtables hints io io.encodings.utf8
-io.files io.styles kernel lexer make math math.constants
-math.functions math.order math.parser namespaces parser
-prettyprint prettyprint.custom prettyprint.sections quotations
-ranges readline sequences sequences.extras sequences.private sequences.deep
-sets sorting strings system ui.theme vectors words ;
+USING: accessors arrays ascii assocs combinators combinators.short-circuit
+command-line continuations debugger grouping hash-sets hashtables hints io
+io.encodings.utf8 io.files io.styles kernel lexer make math math.constants
+math.functions math.order math.parser namespaces parser prettyprint
+prettyprint.custom prettyprint.sections quotations random ranges readline
+sequences sequences.extras sequences.private sequences.deep sets sorting strings
+system ui.theme vectors words ;
 IN: boil
 
 << ALIAS: ' CHAR: >>
@@ -169,6 +168,7 @@ DEFER: read-at-depth
   } cond
 ;
 : (.) ( expr -- ) [ fmt-parens ] with-pprint "" print ;
+: stringy ( expr -- expr ) [ dup [ number? ] all? [ >string ] when ] deep-map ;
 
 DEFER: apply
 : 2apply ( ctx x y f -- ctx f(x)(y) ) rot [ apply ] dip swap apply ; inline
@@ -272,6 +272,8 @@ MACRO: primitives ( -- table )
     { "Write" P[ 1 write { } ] }
     { "Print" P[ 1 print { } ] }
     { "Out"   P[ 1 dup ... ] }
+    { "Outs"  P[ 1 dup stringy ... ] }
+    { "Rand"  P[ 1 [ 1.0 random ] [ >integer random ] if-zero ] }
     { "input" P[ 0 read-contents >array ] }
     TRIG: sin cos tan asin acos atan sqrt round exp ln ;
   } 1quotation
@@ -357,9 +359,7 @@ M: primitive-error error.
         { [ ascii:LETTER? not ] [ ascii? ] } 1&& [ 1 + ] when
         cut-slice [ boil-with ] [ >string ] bi* pick set-at ] }
     { [ dup ")v" head? ] [ drop dup keys . ] }
-    { [ dup ")s " head? ]
-      [ 3 tail-slice boil-with 
-        [ dup [ number? ] all? [ >string ] when ] deep-map . ] }
+    { [ dup ")s " head? ] [ 3 tail-slice boil-with stringy . ] }
     { [ dup ")p " head? ] [ 3 tail-slice parse (.) ] }
     [ boil-with . ] } cond
 ;
