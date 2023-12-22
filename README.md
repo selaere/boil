@@ -28,8 +28,8 @@ install [factor](https://factorcode.org) and then, replacing `factor` by whichev
 * [combinators](doc/combinators.md)
 * [perplexed face](doc/perplexed_face.md) `:/`
 * [reimplementing scan](doc/reimplementing_scan.md)
-* [syntax](doc/syntax.md) (more details about how precedence works etc)
-* [more words](doc/more_words.md) (inspirations, discourse, blah blah blah...)
+* [syntax](doc/syntax.md) (more details about how precedence works)
+* [more words](doc/more_words.md) (inspirations, discourse, blah blah blah)
 
 ## primitives
 <table><tr></tr>
@@ -81,19 +81,19 @@ install [factor](https://factorcode.org) and then, replacing `factor` by whichev
 <td align="right"><code>x y*</code></td>
 <td>times</td>
 <td><pre>
-1 2 3 ,  4 5 6 , * .. { 4 10 18 }
+1 2 3 ,  4 5 6 ,* .. { 4 10 18 }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x y+</code></td>
 <td>add</td>
 <td><pre>
-1 2 3 ,  4 5 6 , + .. { 5 7 9 }
+1 2 3 ,  4 5 6 ,+ .. { 5 7 9 }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x-</code></td>
 <td>negate</td>
 <td><pre>
-0 1 2 , - .. { 0 -1 -2 }
+0 1 2 ,- .. { 0 -1 -2 }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x f/</code></td>
