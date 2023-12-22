@@ -1,5 +1,5 @@
 # boil
-is a dynamically typed functional pure-ish language based on untyped lambda calculus etc etc. you know the sort. it is also a minimalistic<sup>1</sup> vector<sup>2</sup> tacit<sup>3</sup> programming language with postfix<sup>4</sup>, whitespace-based<sup>5</sup> terse<sup>6</sup> syntax
+is a dynamically typed functional pure-ish language based on untyped lambda calculus etc etc. boring. it is also a minimalistic<sup>1</sup> vector<sup>2</sup> tacit<sup>3</sup> programming language with postfix<sup>4</sup>, whitespace-based<sup>5</sup> terse<sup>6</sup> syntax
 
 1. there are not a lot of built-in functions (see [primitives](#primitives))
 2. boil values can either be scalars or vectors (which i will from here on just call "lists"). arithmetic operations map to every element in a list.
