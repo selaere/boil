@@ -2,7 +2,7 @@
 is a dynamically typed functional pure-ish language based on untyped lambda calculus etc etc. boring. it is also a minimalistic<sup>1</sup> vector<sup>2</sup> tacit<sup>3</sup> programming language with postfix<sup>4</sup>, whitespace-based<sup>5</sup> terse<sup>6</sup> syntax
 
 1. there are not a lot of built-in functions (see [primitives](#primitives))
-2. boil values can either be scalars or vectors (which i will from here on just call "lists"). arithmetic operations like `+` addition map to every element in a list.
+2. boil values can either be scalars or vectors (which i will from here on just call "lists"). arithmetic operations like `+` (addition) map to every element in a list.
 3. functions can be defined using combinators like `:` compose, as well as currying for partial evaluation.
 4. `x-` means "minus x". application goes in left-to-right order
 5. spaces are used to regroup things: `ABCD` is `((AB)C)D`, `A  B CD` is `A(B(CD))`. `x yF` calls F with y and x
