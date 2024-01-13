@@ -265,8 +265,8 @@ MACRO: primitives ( -- table )
     { ' + P[ 2 [ + ] 2scalar ] }
     { ' * P[ 2 [ * ] 2scalar ] }
     { ' % P[ 1 [ [ divide-by-zero ] [ recip ] if-zero ] 1scalar ] }
-    { ' { P[ 2 [ max ] 2scalar ] }
-    { ' } P[ 2 [ min ] 2scalar ] }
+    { ' { P[ 2 [ min ] 2scalar ] }
+    { ' } P[ 2 [ max ] 2scalar ] }
     { ' _ P[ 1 [ floor >integer ] 1scalar ] }
     { ' = P[ 2 [ = bool ] 2scalar ] }
     { ' < P[ 2 [ < bool ] 2scalar ] }
@@ -288,7 +288,7 @@ MACRO: primitives ( -- table )
     { ' \ P[ 2 setup-reduce accumulate swap suffix ] }
     { ' ? P[ 1 where ] }
     { ' ~ P[ 1 listify grade ] }
-    { "Pow"   P[ 2 [ [ ^ assert-real ] 2scalar ] }
+    { "Pow"   P[ 2 [ ^ assert-real ] 2scalar ] }
     { "pi"    P[ 0 pi ] }
     { "Deco"  P[ 1 [ >rat >fraction 2array ] 1scalar ] }
     { "Rat"   P[ 1 [ >rat ] 1scalar ] }

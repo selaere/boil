@@ -7,8 +7,8 @@ here are the arithmetic primitives in boil. i also figured out how to use latex 
 | negate | `x-` | $-x$
 | reciprocal | `x%` | $\frac 1 x$
 | floor | `x_` | $\lfloor x \rfloor$
-| min | `x y}` | $\min(x,y)$
-| max | `x y{` | $\max(x,y)$
+| min | `x y{` | $\min(x,y)$
+| max | `x y}` | $\max(x,y)$
 
 doesnt that look cool? so academic
 
@@ -21,7 +21,7 @@ but if you do want them as tacit functions, you'll have to write `- +:` and `% *
 
 so, the 2-argument arithmetic functions are addition `+` and multiplication `*`. it's also neat that these have neat properties: they are both _commutative_ (`x y+` = `y x+`) which can be useful for rearranging stuff around. they are also _associative_ (`x y* z*` and `x  y z* *`). this one is fun! the former is shorter in explicit style, the latter is easy to [compose](combinators.md#composition) like `x  y z(* *::)`.
 
-## floor
+## floor (`_`)
 
 the other maybe weirder thing is. what is floor `_` doing there?
 ```
@@ -81,7 +81,7 @@ and rounding a number is the same as adding 0.5 (or `2%`) before flooring:
 ```
 except this always rounds up when the decimal part is exactly `.5`. which you might want or maybe not. another one that rounds down instead is `- 2%+: _: +:`. if you really care about it being ieee754 round to even then use `Round`.
 
-## min and max
+## min (`{`) and max (`}`)
 these are also weird additions. you can implement them with the comparison operators pretty easily. most of the reason for them to be there is that when restricted to arguments that are only 0 and 1,
 
 |x|y|$\min(x,y)$|$\max(x,y)$|
@@ -91,7 +91,19 @@ these are also weird additions. you can implement them with the comparison opera
 |1|0|**0**|**1**
 |1|1|**1**|**1**
 
-huh. familiar. min is 1 when both arguments are 1s, and max is 1 when any argument is 1. in other words, min is AND, max is OR.
+huh. familiar. min is 1 when both arguments are 1s, and max is 1 when any argument is 1. in other words, min `{` is the AND gate, max `}` is the OR gate.
+
+the symbols for min `{` and max `}` are confusing to tell apart, but the direction of the pointy bit corresponds to the less than `<` and greater than `>` symbols. as in, you are choosing which argument is lesser or greater.
+
+getting the minimum `{/` and maximum `}/` of an array is pretty common, and these have the same glyph as all `{/` and any `}/`.
+
+using these in boolean arrays with scan `\` gives what i call the "smear vectors": `}\` marks with ones after the first 1, and `{\` marks with ones until the first 0:
+```
+    1 1 1 0 1 0 1 1 ,{\
+..{ 1 1 1 0 0 0 0 0 }
+    0 0 0 1 0 1 1 0 1 0 ,}\
+..{ 0 0 0 1 1 1 1 1 1 1 }
+```
 
 ## number types
 

@@ -7,14 +7,14 @@
   10= ?: perm: ^
 Lines.
 
-"0:"  ><, ]|  }/:      Digit.
+"0:"  ><, ]|  {/:      Digit.
 0 1-;  10 1 ,* :  +/:  Cal.
 
 Lines  Digit ?: ^ "0"0-+: Cal: ' :  +/:
 Parti.
 
 "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" ,names.
-  x.  names  x= 1;: }/: '  names #' x#> 0= *  ?  1+  x0 x0Digit? "0"-+ ;
+  x.  names  x= 1;: {/: '  names #' x#> 0= *  ?  1+  x0 x0Digit? "0"-+ ;
 Startno.
 
 # !: (d. d ;`/ 1+ !' d+): ^ Suffixes.

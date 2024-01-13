@@ -2,27 +2,27 @@
 10= ?: (l. 1- l; 1+ s. s- l+ !' s+): ^
 Lines.
 
-y.x.  y  y x= 0; {/ 0= ?  x ;`   /   0!$ ;` :`
+y.x.  y  y x= 0; }/ 0= ?  x ;`   /   0!$ ;` :`
 Dedup.
 "0"0-+  10* +: ` / :   Parse.
 
 0 ;`                    Shr.
 0;  # -: !: ` :  ^      Shl.
-]ShlShr, {/: ]', :/ ;/: Adj.
+]ShlShr, }/: ]', :/ ;/: Adj.
 
 dig.  dig  Shr' >: ^  ;/  +\  dig ;/ *   Groups.
 
-{/ !: 1+:  = ': ` :  ^  Sep.
+}/ !: 1+:  = ': ` :  ^  Sep.
 in.
-  in   "09"  <>, ]|   {/   0=   dig.
-  in "."0= dig{ 0= Adj  influ.
+  in   "09"  <>, ]|   }/   0=   dig.
+  in "."0= dig} 0= Adj  influ.
   digGroupsSep grps.
   grps  in ;/ ?` Parse: '  nums.
-  grps  influ} {/: '  nums*  +/
+  grps  influ{ }/: '  nums*  +/
 Parti.
 
 in.
-  in   "09"  <>, ]|   {/   0=   dig.
+  in   "09"  <>, ]|   }/   0=   dig.
   dig Groups grp.
   grpSep  in ;/ ?` Parse: '  nums.
   in ;/ "*"0= ?

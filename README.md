@@ -25,6 +25,7 @@ install [factor](https://factorcode.org) and then, replacing `factor` by whichev
 * [implementing stuff with lists](doc/rearranging_lists.md)
   * [sorting](doc/sorting.md) `~`
   * [reading](doc/reading.md) (splitting, parsing numbers)
+* [arithmetic](doc/arithmetic.md)
 * [control flow](doc/control_flow.md) (conditions, iteration, recursion)
 * [combinators](doc/combinators.md)
 * [perplexed face](doc/perplexed_face.md) `:/`
@@ -192,9 +193,9 @@ install [factor](https://factorcode.org) and then, replacing `factor` by whichev
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x y{</code></td>
-<td>max</td>
+<td>min</td>
 <td><pre>
-4 5 6 , 5{ .. { 5 5 6 }
+4 5 6 , 5{ .. { 4 5 5 }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x  y f|</code></td>
@@ -204,9 +205,9 @@ install [factor](https://factorcode.org) and then, replacing `factor` by whichev
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x y}</code></td>
-<td>min</td>
+<td>max</td>
 <td><pre>
-4 5 6 , 5} .. { 4 5 5 }
+4 5 6 , 5} .. { 5 5 6 }
 </pre></td></tr><tr></tr>
 <tr>
 <td align="right"><code>x~</code></td>
