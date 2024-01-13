@@ -7,8 +7,6 @@ sequences sequences.extras sequences.private sequences.deep sets sorting strings
 system ui.theme vectors words ;
 IN: boil
 
-<< ALIAS: ' CHAR: >>
-
 TUPLE: numlit { inner number } ;
 TUPLE: ident  { inner string } ;
 TUPLE: vardot { inner string } ;
@@ -48,16 +46,16 @@ UNION: val   number array func lambda ;
 
 : trim-until-matching ( src -- src' )
   0 [ dup 0 = ]
-  [ over first { { ' ( [ 1 + ] } { ' ) [ 1 - ] } [ drop ] } case
+  [ over first { { CHAR: ( [ 1 + ] } { CHAR: ) [ 1 - ] } [ drop ] } case
     [ rest-slice ] dip ] do until
   drop
 ;
 
-: (cut-string) ( src -- src' str ) [ ' " = not ] cut-some-while swap rest-slice ;
+: (cut-string) ( src -- src' str ) [ CHAR: " = not ] cut-some-while swap rest-slice ;
 
 : cut-string ( src -- src' str )
   (cut-string) [ rest-slice ] dip
-  [ dup first ' " = ] [ (cut-string) [ append ] dip ] while swap
+  [ dup first CHAR: " = ] [ (cut-string) [ append ] dip ] while swap
 ; 
 
 : continuation-letter ( chr -- ? )
@@ -65,7 +63,7 @@ UNION: val   number array func lambda ;
 ;
 
 : string-to-frac ( str -- n )
-  dup [ ' . = ] find drop
+  dup [ CHAR: . = ] find drop
   [ [ swap remove-nth ] keep
     over length swap -
     [ [ dec> ] [ invalid-integer-literal ] recover ] dip
@@ -81,26 +79,26 @@ UNION: val   number array func lambda ;
 : readtoken ( src -- src' token )
   dup ?first
   {
-    { [ over ".." head? ] [ drop [ ' \n = not ] cut-some-while drop nothing ] }
+    { [ over ".." head? ] [ drop [ CHAR: \n = not ] cut-some-while drop nothing ] }
     { [ over "(." head? ] [ drop trim-until-matching nothing ] }
-    { [ dup ' \n = ] [ drop nothing ] }
+    { [ dup CHAR: \n = ] [ drop nothing ] }
     { [ dup not ] [ drop f ] }
     { [ dup ascii:digit? ]
-      [ drop [ { [ ascii:digit? ] [ ' . = ] } 1|| ] cut-some-while
+      [ drop [ { [ ascii:digit? ] [ CHAR: . = ] } 1|| ] cut-some-while
         string-to-frac numlit boa ] }
     { [ dup ascii:Letter? ]
       [ drop [ continuation-letter ] cut-some-while
-        over ?first ' . = 
+        over ?first CHAR: . = 
         [ [ rest-slice ] dip >string vardot boa ]
         [ >string ident boa ] if ] }
-    { [ dup ' " = ]
+    { [ dup CHAR: " = ]
       [ drop cut-string
         [ numlit boa ] V{ } map-as ] }
-    { [ dup ' ( = ] [ drop rest-slice '(' ] }
-    { [ dup ' ) = ] [ drop rest-slice ')' ] }
-    { [ dup ' , = ] [ drop rest-slice ',' ] }
+    { [ dup CHAR: ( = ] [ drop rest-slice '(' ] }
+    { [ dup CHAR: ) = ] [ drop rest-slice ')' ] }
+    { [ dup CHAR: , = ] [ drop rest-slice ',' ] }
     { [ dup ascii? ] [ [ rest-slice ] dip prim boa ] }
-    [ over ?second ' . =
+    [ over ?second CHAR: . =
       [ [ 2 tail-slice ] dip 1string vardot boa ]
       [ [ rest-slice ] dip 1string ident boa ] if ]
   } cond
@@ -119,7 +117,7 @@ UNION: val   number array func lambda ;
 DEFER: read-tokens
 DEFER: read-expr
 : readdeeptoken ( src -- src' deeptoken/f )
-  dup ?first ' \n =
+  dup ?first CHAR: \n =
   [ rest-slice dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep -1 swap - ]
   [            dup [ 32 = not ] find-idx [ tail-slice readtoken ] keep           ] if
   over ')' = [ nip f swap ] when
@@ -165,7 +163,7 @@ DEFER: read-at-depth
 ;
 
 : parse ( code -- tokens )
-  dup "#!" head? [ [ ' \n = not ] cut-some-while drop ] when
+  dup "#!" head? [ [ CHAR: \n = not ] cut-some-while drop ] when
   read-tokens drop read-expr
 ;
 
@@ -261,33 +259,33 @@ SYNTAX: TRIG:
 ALIAS: ln log  ALIAS: exp e^
 MACRO: primitives ( -- table )
   {
-    { ' - P[ 1 [ neg ] 1scalar ] }
-    { ' + P[ 2 [ + ] 2scalar ] }
-    { ' * P[ 2 [ * ] 2scalar ] }
-    { ' % P[ 1 [ [ divide-by-zero ] [ recip ] if-zero ] 1scalar ] }
-    { ' { P[ 2 [ min ] 2scalar ] }
-    { ' } P[ 2 [ max ] 2scalar ] }
-    { ' _ P[ 1 [ floor >integer ] 1scalar ] }
-    { ' = P[ 2 [ = bool ] 2scalar ] }
-    { ' < P[ 2 [ < bool ] 2scalar ] }
-    { ' > P[ 2 [ > bool ] 2scalar ] }
-    { ' & P[ 2 equal bool ] }
-    { ' $ P[ 1 1array ] }
-    { ' ] P[ 1 ] }
-    { ' ; P[ 2 [ listify ] bi@ append ] }
-    { ' : P[ 3 [ apply ] dip apply ] }
-    { ' ` P[ 3 swapd 2apply ] }
-    { ' [ P[ 2 swap apply ] }
-    { ' ^ P[ 2 [ apply ] keepd swap apply ] }
-    { ' # P[ 1 dup array? [ length ] [ drop -1 ] if ] }
-    { ' ! P[ 1 iota ] }
-    { ' ' P[ 2 [ apply ] curry 1each ] }
-    { ' | P[ 3 [ 2apply ] curry 2each ] }
-    { ' @ P[ 2 nip ] }
-    { ' / P[ 2 setup-reduce reduce ] }
-    { ' \ P[ 2 setup-reduce accumulate swap suffix ] }
-    { ' ? P[ 1 where ] }
-    { ' ~ P[ 1 listify grade ] }
+    { CHAR: - P[ 1 [ neg ] 1scalar ] }
+    { CHAR: + P[ 2 [ + ] 2scalar ] }
+    { CHAR: * P[ 2 [ * ] 2scalar ] }
+    { CHAR: % P[ 1 [ [ divide-by-zero ] [ recip ] if-zero ] 1scalar ] }
+    { CHAR: { P[ 2 [ min ] 2scalar ] }
+    { CHAR: } P[ 2 [ max ] 2scalar ] }
+    { CHAR: _ P[ 1 [ floor >integer ] 1scalar ] }
+    { CHAR: = P[ 2 [ = bool ] 2scalar ] }
+    { CHAR: < P[ 2 [ < bool ] 2scalar ] }
+    { CHAR: > P[ 2 [ > bool ] 2scalar ] }
+    { CHAR: & P[ 2 equal bool ] }
+    { CHAR: $ P[ 1 1array ] }
+    { CHAR: ] P[ 1 ] }
+    { CHAR: ; P[ 2 [ listify ] bi@ append ] }
+    { CHAR: : P[ 3 [ apply ] dip apply ] }
+    { CHAR: ` P[ 3 swapd 2apply ] }
+    { CHAR: [ P[ 2 swap apply ] }
+    { CHAR: ^ P[ 2 [ apply ] keepd swap apply ] }
+    { CHAR: # P[ 1 dup array? [ length ] [ drop -1 ] if ] }
+    { CHAR: ! P[ 1 iota ] }
+    { CHAR: ' P[ 2 [ apply ] curry 1each ] }
+    { CHAR: | P[ 3 [ 2apply ] curry 2each ] }
+    { CHAR: @ P[ 2 nip ] }
+    { CHAR: / P[ 2 setup-reduce reduce ] }
+    { CHAR: \ P[ 2 setup-reduce accumulate swap suffix ] }
+    { CHAR: ? P[ 1 where ] }
+    { CHAR: ~ P[ 1 listify grade ] }
     { "Pow"   P[ 2 [ ^ assert-real ] 2scalar ] }
     { "pi"    P[ 0 pi ] }
     { "Deco"  P[ 1 [ >rat >fraction 2array ] 1scalar ] }
