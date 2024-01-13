@@ -28,6 +28,8 @@ ERROR: function-unexpected x ;
 ERROR: scalar-expected x y ;
 ERROR: divide-by-zero ;
 ERROR: empty-list ;
+ERROR: invalid-integer-literal ;
+ERROR: out-of-domain ;
 
 ERROR: primitive-error ctx args symbol err ;
 ERROR: variable-undefined name ;
@@ -62,6 +64,20 @@ UNION: val   number array func lambda ;
   { [ ascii:letter? ] [ "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔₕₖₗₘₙₚₛₜᵢᵣᵤᵥⱼᵦᵧᵨᵩᵪ" member? ] } 1||
 ;
 
+: string-to-frac ( str -- n )
+  dup [ ' . = ] find drop
+  [ [ swap remove-nth ] keep
+    over length swap -
+    [ [ dec> ] [ invalid-integer-literal ] recover ] dip
+    over integer? not [ invalid-integer-literal ] when
+    10^ /
+  ] [ dec> ] if*
+;
+
+: >rat ( a -- m/n )
+  dup float? [ frexp [ 2 53 ^ * >integer ] [ 53 swap - 2^ ] bi* / ] when
+;
+
 : readtoken ( src -- src' token )
   dup ?first
   {
@@ -71,7 +87,7 @@ UNION: val   number array func lambda ;
     { [ dup not ] [ drop f ] }
     { [ dup ascii:digit? ]
       [ drop [ { [ ascii:digit? ] [ ' . = ] } 1|| ] cut-some-while
-        dec> numlit boa ] }
+        string-to-frac numlit boa ] }
     { [ dup ascii:Letter? ]
       [ drop [ continuation-letter ] cut-some-while
         over ?first ' . = 
@@ -150,7 +166,8 @@ DEFER: read-at-depth
 
 : parse ( code -- tokens )
   dup "#!" head? [ [ ' \n = not ] cut-some-while drop ] when
-  read-tokens drop read-expr ;
+  read-tokens drop read-expr
+;
 
 : fmt-parens ( expr -- )
   { { [ dup fcall?  ] [
@@ -229,9 +246,13 @@ SYNTAX: P[  ! ]
     nth ] bi prepose suffix!
 ;
 
+: assert-real ( x -- x ) dup real? not [ out-of-domain ] when ;
+
 SYNTAX: TRIG:
   [ [ dup unclip ch>upper prefix , 1 ,
-      parse-word 1quotation [ 1scalar ] curry [ first ] prepose ,
+      parse-word 1quotation
+      [ assert-real ] compose
+      [ 1scalar ] curry [ first ] prepose ,
     ] { } make suffix
   ] ";" swap each-token
 ;
@@ -267,8 +288,10 @@ MACRO: primitives ( -- table )
     { ' \ P[ 2 setup-reduce accumulate swap suffix ] }
     { ' ? P[ 1 where ] }
     { ' ~ P[ 1 listify grade ] }
-    { "Pow"   P[ 2 [ ^ ] 2scalar ] }
+    { "Pow"   P[ 2 [ [ ^ assert-real ] 2scalar ] }
     { "pi"    P[ 0 pi ] }
+    { "Deco"  P[ 1 [ >rat >fraction 2array ] 1scalar ] }
+    { "Rat"   P[ 1 [ >rat ] 1scalar ] }
     { "Write" P[ 1 write { } ] }
     { "Print" P[ 1 print { } ] }
     { "Out"   P[ 1 dup ... ] }

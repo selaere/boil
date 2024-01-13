@@ -17,7 +17,8 @@ install [factor](https://factorcode.org) and then, replacing `factor` by whichev
 * or if you dont know what that means,
   ```sh
   git clone https://github.com/selaere/boil
-  factor -e='"." add-vocab-root "boil" deploy'  # run outside the cloned repo
+  factor -e='USE: namespaces "." deploy-directory set "." add-vocab-root "boil" deploy'
+  # ^ run outside the cloned repo
   ```
 
 ## more things
@@ -219,8 +220,9 @@ install [factor](https://factorcode.org) and then, replacing `factor` by whichev
 
 ## other builtins
 
-* `xSin` `xCos` `xTan` `xAsin` `xAcos` `xAtan` `xSqrt` `xRound` `xExp` `xLn` do exactly what you expect them to do
+* `xSin` `xCos` `xTan` `xAsin` `xAcos` `xAtan` `xSqrt` `xRound` `xExp` `xLn` do exactly what you expect them to do (see [arithmetic](doc/arithmetic.md))
 * `b nPow` is b to the power of n
+* `xDeco` returns the two components of ratio x
 * `pi` is pi
 
 these are the reason why i said "pure-ish" at the start:
