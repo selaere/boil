@@ -397,5 +397,4 @@ M: primitive-error error.
   command-line get ?first [ repl drop f ] unless* utf8 file-contents boil
   dup { [ array? ] [ empty? ] } 1&& [ drop ] [ ... ] if
 ;
-
 MAIN: main

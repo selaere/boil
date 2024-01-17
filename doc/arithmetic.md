@@ -52,7 +52,7 @@ we can make this shallower by swapping the direction of addition:
     72 20b.a. a b%* _ b* - a+
 12
 ```
-you can make the earlier one tacit:
+or you can make the earlier one tacit:
 ```
 b.a.  a  a b%* _ b* - +
 b.a.  a  a b(% *: _::) b* - +
