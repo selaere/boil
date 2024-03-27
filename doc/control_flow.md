@@ -12,7 +12,7 @@ making the absolute number is just picking from `]-,` (or `] -;`) based on the s
 ```
 
 ## iteration
-bounded-length iteration is pretty easy. try using `!` (iota), `'` (each) and `/` (reduce).
+bounded-length iteration is pretty easy. try using `!` (iota), `'` (each) and `/` (reduce). see also [mapping](mapping.md)
 ```
 5! 1+ */  .. wow!
 ```
