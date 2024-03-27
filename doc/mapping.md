@@ -160,7 +160,7 @@ but in this case, to get this behavior, one each-right is enough
 ```
 now instead of multiplying `{ 1 2 3 ... 10 }` with itself, it is multiplying `{ 1 2 3 ... 10 }` by `1`, and then `{ 1 2 3 ... 10 }` by `2`, and so on, building each row.
 
-## zip `|` acting SUS
+## zip does weird things
 zip behaves interestingly when given lists with unequal lengths:
 
 ```
