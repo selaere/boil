@@ -76,7 +76,7 @@ we can even use lambdas (closures) to turn this into a function. `x. y` is a fun
 because of currying, you can just have multiple `x. y.`s to take multiple arguments.
 ```
 "catnip" 2  n. l.  l  l#! n+  .. "tnipca"
-"catnip" 2n.l.(l  l#! n+)     .. or this
+"catnip" 2n.l.  l  l#! n+     .. or this
 "catnip" 2n.l.l(l#! n+)       .. or this. you pick
 ```
 still, boil has a bunch of combinators you can use to avoid writing lambdas. here's a list! they also have letters if you're that kind of nerd
@@ -96,24 +96,24 @@ we can turn `l # ! n+` into a single function call by composing `:` all the func
 ```
 and remove the two mentions of `l` using self `^`:
 ```
-"catnip" 2(n. l. l  # !: n+: ^)
+"catnip" 2n.l.(l  # !: n+: ^)
 ```
 a lambda that just consists of the argument being called with a constant function is the same as the function itself (this is called "eta reduction"), so we can reduce this into:
 ```
-"catnip" 2(n. # !: n+: ^)
+"catnip" 2n. # !: n+: ^  .. "tnipca"
 ```
 we can still reduce this to not use any lambdas at all. if you play with the combinators for a bit, you might arrive to something like this. `` F  G :` `` is reverse compose ("prepose"), i think of it as adding a step to do before the function (get the domain _before_ we add)
 ```
-"catnip" 2(n.  n  +  # !: :`  ^)
+"catnip" 2n.(n  +  # !: :`  ^)
 ```
 turning this into a function just means composing all functions together (because of boil's syntax, this means adding a `:` to every function but the first one)
 ```
 "catnip" 2(+  # !: :` :  ^:) .. "tnipca"
 ```
 
-with these combinators you can build other combinators, if you feel like it. in fact, you can build all combinators. here is the infamous S combinator (<code>x&nbsp;&nbsp;F&nbsp;GS&nbsp;=>&nbsp;xF&nbsp;xG</code>, or `λgfx.gx(fx)`)
+with these combinators you can build other combinators, if you feel like it. in fact, you can build all combinators. here is the infamous S combinator, for example (<code>x&nbsp;&nbsp;F&nbsp;GS&nbsp;=>&nbsp;xF&nbsp;xG</code>, or `λgfx.gx(fx)`)
 ```
-G.F.x. xF xG       .. note how the args are listed backwards
+G.F.x. xF xG        .. note how the args are listed backwards
 G.F.x.  x  x F G`   .. x yF => y  x F`
 G.F.x.  x  x  F G`: .. xFG => x  F G:
 G.F.x.  x  F G`: ^  .. x xF => x F^
@@ -128,7 +128,7 @@ G. G  ` :: ^::      .. xFGH => x  F G: H:
 and we can use like this! the syntax for lambdas also works for assignment:
 ```
 ` :: ^:: S.  4  ! ;S  .. { 0 1 2 3 4 }
-.. 4  ! ;S  ===  4! 4;
+                      .. 4  ! ;S  ===  4! 4;
 ```
 
-now you can play around with the things you know, look at the [list of primitives](../README.md#primitives), or [read more words](../README.md#more-words)
+that was a brief outline of how boil works. now you can play around with the things you know, look at the [list of primitives](../README.md#primitives), or [read more stuff](../README.md#more-words).
