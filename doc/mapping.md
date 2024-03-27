@@ -191,4 +191,3 @@ though the one using `!` has something similar for some strings, because of cycl
 "memory" 3! "mem"& .. 1
 "me" 3! "mem"&     .. 1
 ```
-be careful is all.

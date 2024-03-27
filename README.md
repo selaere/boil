@@ -8,18 +8,8 @@ is a dynamically typed functional pure-ish language based on untyped lambda calc
 5. spaces are used to regroup things: `ABCD` is `((AB)C)D`, `A  B CD` is `A(B(CD))`. `x yF` calls F with y and x
 6. most built-in are just ascii symbols (these are called "primitives")
 
-### [INTROduction](doc/introduction.md) (<- that blue thing is a link) (click there)
+## [INTROduction](doc/introduction.md) (<- that blue thing is a link) (click there)
 it's a sort of tutorial but not really and it's not that long look at it
-## how to run/build
-install [factor](https://factorcode.org) (0.99 works) and then, replacing `factor` by whichever name you have factor installed with,
-* `factor boil.factor`,
-* or place boil in your work folder and `"boil" deploy`,
-* or if you dont know what that means,
-  ```sh
-  git clone https://github.com/selaere/boil
-  factor -e='USE: namespaces "." deploy-directory set "." add-vocab-root "boil" deploy'
-  # ^ run outside the cloned repo
-  ```
 
 ## more words
 * [implementing stuff with lists](doc/rearranging_lists.md)
@@ -33,6 +23,17 @@ install [factor](https://factorcode.org) (0.99 works) and then, replacing `facto
 * [reimplementing scan](doc/reimplementing_scan.md)
 * [syntax](doc/syntax.md) (more details about how precedence works)
 * [commentary](doc/commentary.md) (inspirations, discourse, blah blah blah)
+
+## how to run/build
+install [factor](https://factorcode.org) (0.99 works) and then, replacing `factor` by whichever name you have factor installed with,
+* `factor boil.factor`,
+* or place boil in your work folder and `"boil" deploy`,
+* or if you dont know what that means,
+  ```sh
+  git clone https://github.com/selaere/boil
+  factor -e='USE: namespaces "." deploy-directory set "." add-vocab-root "boil" deploy'
+  # ^ run outside the cloned repo
+  ```
 
 ## primitives
 <table><tr></tr>
@@ -229,8 +230,8 @@ install [factor](https://factorcode.org) (0.99 works) and then, replacing `facto
 
 these are the reason why i said "pure-ish" at the start:
 * `input` gets all the input from stdin until eof
-* `sWrite` writes a string to stdout
-* `sPrint` writes a string to stdout with a trailing newline
+* `sWrite` writes a string to stdout and returns s
+* `sPrint` writes a string to stdout with a trailing newline and returns s
 * `xOut` prettyprints x and returns x
 * `xOuts` prettyprints x and returns x, where lists with only numbers will be formatted as strings
 * `nRand` returns a random integer in [0, n). if n = 0, return a random float in [0.0, 1.0)

@@ -31,6 +31,7 @@ now we have functions that are, as i say, _accidentally ambivalent_. it's pretty
 look! that `?` is just a filter!
 ```
 9 1 2 3 8 4 7 2 4 9 ,x.  x  x 5< ?  .. { 1 2 3 4 2 4 }
+9 1 2 3 8 4 7 2 4 9 ,  5< ?: ^      .. { 1 2 3 4 2 4 }
 ```
 
 iota is expanded to be useful when used with two arguments. defining iota for a negative argument is not obvious, but if we define it like this:

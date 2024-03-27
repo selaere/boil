@@ -294,8 +294,8 @@ MACRO: primitives ( -- table )
     { "pi"    P[ 0 pi ] }
     { "Deco"  P[ 1 [ >rat >fraction 2array ] 1scalar ] }
     { "Rat"   P[ 1 [ >rat ] 1scalar ] }
-    { "Write" P[ 1 write { } ] }
-    { "Print" P[ 1 print { } ] }
+    { "Write" P[ 1 dup write ] }
+    { "Print" P[ 1 dup print ] }
     { "Out"   P[ 1 dup ... ] }
     { "Outs"  P[ 1 dup stringy ... ] }
     { "Rand"  P[ 1 [ 1.0 random ] [ >integer random ] if-zero ] }
