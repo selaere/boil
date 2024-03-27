@@ -11,7 +11,7 @@ is a dynamically typed functional pure-ish language based on untyped lambda calc
 ### [INTROduction](doc/introduction.md) (<- that blue thing is a link) (click there)
 it's a sort of tutorial but not really and it's not that long look at it
 ## how to run/build
-install [factor](https://factorcode.org) and then, replacing `factor` by whichever name you have factor installed with,
+install [factor](https://factorcode.org) (0.99 works), and then, replacing `factor` by whichever name you have factor installed with,
 * `factor boil.factor`,
 * or place boil in your work folder and `"boil" deploy`,
 * or if you dont know what that means,

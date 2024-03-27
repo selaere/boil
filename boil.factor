@@ -256,7 +256,7 @@ SYNTAX: TRIG:
 ;
 >>
 
-ALIAS: ln log  ALIAS: exp e^
+ALIAS: ln log  ALIAS: exp e^  ALIAS: round round-to-even
 MACRO: primitives ( -- table )
   {
     { CHAR: - P[ 1 [ neg ] 1scalar ] }
