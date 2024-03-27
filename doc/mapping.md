@@ -92,6 +92,11 @@ or equivalently, the `'` is composed to `;`, not just applied,
 ```
 so you can think of `'` as "each-right" and `':` as "each-left".
 
+another way of writing each-left is to swap the function, map, and swap back, to get the mapping to work on the other argument. this is convenient in some cases, especially when you can remove the first swap due to the function being commutative. but also the different quotes `` F`'` ``  look quite funny
+```
+1 2 3 ,  4 5 6 ,;`'` .. { { 1 4 5 6 } { 2 4 5 6 } { 3 4 5 6 } }
+```
+
 another example, this time the repeated argument is a number and not a list. you can see this as an each-left with values `1 2 3 ,`, `0` and concatenation; or just like each called with `1 2 3 ,` and the function "append zero" `0;`. you can also use zip `|`, because 0 is a number, but it's a little uglier here,
 ```
 1 2 3 ,0(; ':) .. { { 1 0 } { 2 0 } { 3 0 } }
@@ -153,7 +158,7 @@ but in this case, to get this behavior, one each-right is enough
     { 10 20 30 40 50 60 70 80 90 100 }
 }
 ```
-now instead of multiplying `{ 1 2 3 ... 10 }` with itself, it is multiplying `{ 1 2 3 ... 10 }` by `1`, and then `{ 1 2 3 ... 10 }` by `2`, and so on, building each row. 
+now instead of multiplying `{ 1 2 3 ... 10 }` with itself, it is multiplying `{ 1 2 3 ... 10 }` by `1`, and then `{ 1 2 3 ... 10 }` by `2`, and so on, building each row.
 
 ## zip `|` acting SUS
 zip behaves interestingly when given lists with unequal lengths:
