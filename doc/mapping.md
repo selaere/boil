@@ -31,7 +31,7 @@ if this seems familiar, it's because it's similar to how pervasive operations wo
 ```
 1 2 3 , 1+  .. { 2 3 4 }
 ```
-you usually don't need to specify mapping when working with math functions, because they have implicit mapping. in specific, the one-argument functions `-%` act like they've been eached a lot of times, and the two-argument functions `+*<=>{}` act like they've been zipped a lot of times. it's when we look at other functions that aren't pervasive, like the `!` and `;` we've been seeing, when using the iteration functions is important.
+you usually don't need to specify mapping when working with math functions, because they have implicit mapping. in specific, the one-argument functions `-%_` act like they've been eached a lot of times, and the two-argument functions `+*<=>{}` act like they've been zipped a lot of times. it's when we look at other functions that aren't pervasive, like the `!` and `;` we've been seeing, when using the iteration functions is important.
 
 i say "a lot of times" in that paragraph above because this is also an important distinction: each `'` and zip `|` only act on the top-level lists, and won't dig any deeper.
 ```
