@@ -2,9 +2,8 @@ USING: accessors arrays ascii assocs combinators combinators.short-circuit
 command-line continuations debugger grouping hash-sets hashtables hints io
 io.encodings.utf8 io.files io.styles kernel lexer make math math.constants
 math.functions math.order math.parser namespaces parser prettyprint
-prettyprint.custom prettyprint.sections quotations random ranges readline
-sequences sequences.extras sequences.private sequences.deep sets sorting strings
-system ui.theme vectors words ;
+prettyprint.custom prettyprint.sections prettyprint.backend quotations random
+ranges readline sequences sequences.extras sequences.private sequences.deep sets sorting strings system ui.theme vectors words ;
 IN: boil
 
 TUPLE: numlit { inner number } ;
@@ -51,8 +50,8 @@ UNION: val   number array func lambda ;
   drop
 ;
 
-: (cut-string) ( src -- src' str ) [ CHAR: " = not ] cut-some-while swap rest-slice ;
-
+: (cut-string) ( src -- src' str )
+  [ CHAR: " = not ] cut-some-while swap rest-slice ;
 : cut-string ( src -- src' str )
   (cut-string) [ rest-slice ] dip
   [ dup first CHAR: " = ] [ (cut-string) [ append ] dip ] while swap
@@ -183,8 +182,15 @@ DEFER: read-at-depth
   } cond
 ;
 : (.) ( expr -- ) [ fmt-parens ] with-pprint "" print ;
-: stringy ( expr -- expr ) [ dup [ number? ] all? [ >string ] when ] deep-map ;
 
+TUPLE: char char ;
+M: char pprint*  char>> dup 1string "'" "'" pprint-string ;
+
+: stringy ( expr -- expr )
+  [ dup number? [ char boa ]
+    [ dup [ number? ] all? [ >string ] when ] if
+  ] deep-map
+;
 DEFER: apply
 : 2apply ( ctx x y f -- ctx f(x)(y) ) rot [ apply ] dip swap apply ; inline
 
@@ -245,11 +251,9 @@ SYNTAX: P[  ! ]
 ;
 
 : assert-real ( x -- x ) dup real? not [ out-of-domain ] when ;
-
 SYNTAX: TRIG:
   [ [ dup unclip ch>upper prefix , 1 ,
-      parse-word 1quotation
-      [ assert-real ] compose
+      parse-word 1quotation [ assert-real ] compose
       [ 1scalar ] curry [ first ] prepose ,
     ] { } make suffix
   ] ";" swap each-token
@@ -327,7 +331,6 @@ MACRO: get-arity-case ( table -- cond-thing )
 ;
 
 : can-run-func ( func -- ? ) [ symbol>> get-arity ] [ curr>> length ] bi <= ;
-
 : apply ( ctx x f -- ctx f(x) )
   { { [ dup func? ] [
       clone [ swap suffix ] change-curr
@@ -355,16 +358,14 @@ M: func pprint*
     ")" text block>
   ] if
 ;
-
 M: closure pprint*
   f <inset "(" text [ name>> text "." text ] [ def>> fmt-parens ] bi
   ")" text block>
 ;
-
 M: primitive-error error.
   "Error in primitive " write
   dup symbol>> dup fixnum? [ 1string ] when write
-  " being called with arguments" write
+  " called with arguments" write
   dup args>> [ " " write pprint ] each
   ":\n" write
   err>> error.
