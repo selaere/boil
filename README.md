@@ -230,15 +230,15 @@ install [factor](https://factorcode.org) (0.99 works) and then, replacing `facto
 
 these are the reason why i said "pure-ish" at the start:
 * `input` gets all the input from stdin until eof
-* `sWrite` writes a string to stdout and returns s
-* `sPrint` writes a string to stdout with a trailing newline and returns s
+* `sWrite` writes a string to stdout
+* `sPrint` writes a string to stdout with a trailing newline
 * `xOut` prettyprints x and returns x
 * `xOuts` prettyprints x and returns x, where lists with only numbers will be formatted as strings
 * `nRand` returns a random integer in [0, n). if n = 0, return a random float in [0.0, 1.0)
 
 ## repl
 
-if you call the executable with no arguments you get sent to a repl. type in expressions, press enter, and pretty-printed results come out! if you write a line with `var.` at the end, the result of that expression will be saved in the repl environment with the name _var_. there are also some other commands that can be used at the beginning of a line (these will probably change):
+if you call the executable with no arguments you get sent to a repl. type in expressions, press enter, and pretty-printed results come out! if you write a line with `var.` at the end, the result of that expression will be saved in the repl environment with the name _var_. you can also access the last result with `z`. there are also some other commands that can be used at the beginning of a line (these will probably change):
 * `)q`: quit
 * `)s`: pretty-prints the result, where lists with only numbers will be formatted as strings
 * `)v`: show name of every variable set in the environment

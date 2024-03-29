@@ -294,8 +294,8 @@ MACRO: primitives ( -- table )
     { "pi"    P[ 0 pi ] }
     { "Deco"  P[ 1 [ >rat >fraction 2array ] 1scalar ] }
     { "Rat"   P[ 1 [ >rat ] 1scalar ] }
-    { "Write" P[ 1 dup write ] }
-    { "Print" P[ 1 dup print ] }
+    { "Write" P[ 1 write { } ] }
+    { "Print" P[ 1 print { } ] }
     { "Out"   P[ 1 dup ... ] }
     { "Outs"  P[ 1 dup stringy ... ] }
     { "Rand"  P[ 1 [ 1.0 random ] [ >integer random ] if-zero ] }
@@ -374,8 +374,12 @@ M: primitive-error error.
 : boil-with ( ctx string -- ctx value ) parse eval ;
 : boil ( string -- value ) 0 <hashtable> swap boil-with nip ;
 
+: unless-empty ( x quot: ( a -- ) -- )
+  over { [ array? ] [ empty? ] } 1&& [ 2drop ] [ call ] if
+; inline
+
 : repl-command ( ctx cmd -- ctx )
-  { { [ dup { [ empty? ] [ ".." head? ] } 1|| ] [ drop ] }
+  { { [ dup empty? ] [ drop ] } { [ dup ".." head? ] [ drop ] }
     { [ dup "." tail? ]
       [ but-last-slice dup [ continuation-letter not ] find-last
         { [ ascii:LETTER? not ] [ ascii? ] } 1&& [ 1 + ] when
@@ -383,7 +387,7 @@ M: primitive-error error.
     { [ dup ")v" head? ] [ drop dup keys . ] }
     { [ dup ")s " head? ] [ 3 tail-slice boil-with stringy . ] }
     { [ dup ")p " head? ] [ 3 tail-slice parse (.) ] }
-    [ boil-with . ] } cond
+    [ boil-with dup [ . ] unless-empty "z" pick set-at ] } cond
 ;
 : repl ( -- x )
   0 <hashtable> clone
@@ -395,7 +399,7 @@ M: primitive-error error.
   ] loop
 ;
 : main ( -- )
-  command-line get ?first [ repl drop f ] unless* utf8 file-contents boil
-  dup { [ array? ] [ empty? ] } 1&& [ drop ] [ ... ] if
+  command-line get ?first 
+  [ utf8 file-contents boil [ ... ] unless-empty ] [ repl drop ] if*
 ;
 MAIN: main
