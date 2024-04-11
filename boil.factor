@@ -139,7 +139,7 @@ DEFER: read-at-depth
 
 : read-at-depth ( tokens depth -- tokens expr )
   [ dup empty?
-    [ CHAR: ] prim boa ]
+    [ 0 <vector> ]
     [ unclip token>> dup vardot? [ inner>> read-lambda ] when ] if ]
   [| d | 0 <vector> swap
     [ dup ?first [ depth>> d < ] ?call ]
@@ -152,7 +152,7 @@ DEFER: read-at-depth
   ] if-zero
 ;
 
-: ?rest-slice ( seq -- slice ) [ { } ] [ rest-slice ] if-empty ;
+: ?rest-slice ( seq -- slice ) dup empty? [ rest-slice ] unless ;
 
 : read-expr ( tokens -- expr )
   dup [ depth>> ] map
