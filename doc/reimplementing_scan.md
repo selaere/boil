@@ -21,7 +21,7 @@ growing the list progressively. this works well for an argument of depth 1, but 
 "list" "of" "words" , ;\  .. { "list" "listof" "listofwords" }
 "list" "of" "words" , b.a.(a  a 1- b; ;)\ .. "listtoffwords"
 ```
-first, we have to enclose the first element, so that it doesn't read "t" as the first element to scan over. this turns out to be a bit difficult: i've chosen to take the domain outside of the first element, and then concatenate `0]]` in. we will do this as a preprocessing step to the reduction.
+first, we have to enclose the first element, so that it doesn't read "t" as the first element to scan over. this turns out to be a bit difficult: i've chosen to take the domain outside of the first element, and then concatenate `0$$` in. we will do this as a preprocessing step to the reduction.
 
 ```
 .. { { "list" } "of" "words" }
