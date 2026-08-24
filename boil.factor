@@ -6,9 +6,12 @@ prettyprint.custom prettyprint.sections prettyprint.backend quotations random
 ranges sequences sequences.extras sequences.private sequences.deep sets sorting strings system ui.theme vectors vocabs.parser words ;
 IN: boil
 
-DEFER: has-readline?
-DEFER: readline
-os unix? [ "readline" use-vocab ] when
+<<
+os unix? [ "readline" use-vocab ] [
+  "has-readline?" "boil" create-word [ f ] ( -- ? ) define-declared
+  "readline" "boil" create-word [ ] ( -- ) define-declared
+] if
+>>
 
 TUPLE: numlit { inner number } ;
 TUPLE: ident  { inner string } ;
@@ -395,7 +398,7 @@ M: primitive-error error.
 ;
 : repl ( -- x )
   0 <hashtable> clone
-  [ "    " { [ os unix? ] [ has-readline? ] } 0&&
+  [ "    " has-readline?
     [ flush readline ] [ write flush "\n" read-until drop ] if
     [ 32 = ] trim-slice
     dup ")q" head? [ drop f ]
