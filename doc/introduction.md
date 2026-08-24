@@ -63,7 +63,7 @@ and when lists are called, they call each element with the same argument:
 ```
 combining both of these properties, by applying a list of integers, we can select those indices to the array. if the list has the same length as the argument and the indices are unique, this is the same as applying a permutation.
 ```
-"catnip"  4 5 6 1 2 3 ,  .. "nipcat"
+"catnip"  3 4 5 0 1 2 ,  .. "nipcat"
 ```
 with this we can implement many useful list operations. rotating a list is as easy as adding a number to the domain (`x#` is length), and calling it with the original array:
 ```
