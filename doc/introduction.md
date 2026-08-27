@@ -103,7 +103,7 @@ when lists are called, they call each element with the same argument:
 ```
 4  1+ - 2* ,  .. { 5 -4 8 }
 ```
-thus by applying a list of integers, we can select those indices from the array. we can use this to extract elements from a list. also, if the index list has the same length as the argument and the indices are unique, calling it is the same as applying a permutation.
+so by applying a list of integers, we can select those indices from the array. we can use this to extract elements from a list. also, if the index list has the same length as the argument and the indices are unique, calling it is the same as applying a permutation.
 ```
 "catnip"  1 4 ,          .. "ai"
 "catnip"  0 0 0 ,        .. "ccc"
@@ -116,7 +116,7 @@ with this we can implement many useful list operations. rotating a list is as ea
 ### functions
 we can even use lambdas (closures) to turn this into a function. `x. y` is a function that binds the argument to the name `x` and calls `y`.
 ```
-5  x. x x *   .. 
+5  x. x x*   .. 25
 "catnip"   l.  l  l#! 2+   .. "tnipca"
 ```
 if you want to take multiple arguments, you can just write multiple `x. y.`s to take multiple arguments.
@@ -125,7 +125,7 @@ if you want to take multiple arguments, you can just write multiple `x. y.`s to 
 "catnip" 2n.l.  l  l#! n+     .. or this
 "catnip" 2n.l.l(l#! n+)       .. or this. you pick
 ```
-still, boil has a bunch of combinators you can use to avoid writing lambdas. here's a list! they also have letters if you're that kind of nerd
+still, boil has a bunch of combinators you can use to avoid writing lambdas. here's a list!
 
 | name | usage | result
 | --: | --: | ---
@@ -135,6 +135,8 @@ still, boil has a bunch of combinators you can use to avoid writing lambdas. her
 | self | `x F^` | `x xF`
 | compose | `x  F G:` | `xFG`
 | const | `x y@` | `y`
+
+these correspond roughly to rearranging the arguments of a function. `^` (self) duplicates one argument, and `@` (const) removes one argument. `` ` `` (swap) swaps two arguments. `:` (compose) combines two functions: the result of the first function goes to the second.
 
 we can turn `l # ! n+` into a single function call by composing `:` all the functions together:
 ```
@@ -157,7 +159,7 @@ turning this into a function just means composing all functions together (becaus
 "catnip" 2(+  # !: :` :  ^:) .. "tnipca"
 ```
 
-with these combinators you can build other combinators, if you feel like it. in fact, you can build [all combinators](combinators.md).
+with these combinators you can build any term that can be written with lambdas. long functions are however usually more readable with lambdas.
 
 we can define this function to use it later. we just use the lambda syntax for name definition:
 
