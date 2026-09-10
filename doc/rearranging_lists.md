@@ -78,7 +78,11 @@ easy:
 ```
 "one" "two"(y.x. x y ,) .. { "one" "two" }
 ```
-i can even make it tacit if you want. `,` is very much not a function, but if i combine `$` and `;`...
+i can even make it tacit if you want. `,` is very much not a function, but if i combine `$` and `;` i get
+```
+"one" "two"(y.x. x$ y$ ;)
+```
+which can be made tacit like:
 ```
 "one" "two"y.x. x$ y$;        .. { "one" "two" }
 "one" "two"y.x. x$ y($ ;:)    .. { "one" "two" }
@@ -118,11 +122,11 @@ now, the two elements are the identity (so the next argument will go there) and 
 
 the simplest way is to fold with swapped concatenation:
 ```
-"catnip" ;`/ .. "cpinta"
+"catnip" ;`/ .. "pintac"
 ```
 but this only works if the elements inside are scalars. it will flatten the list, like `;/` would.
 ```
-"cat" "dog" "fox" ,;`/ .. "foxdogcat"
+"cat" "dog" "fox" , ;`/ .. "foxdogcat"
 ```
 we can make this work by prepending an empty list, and enclosing the list when concatenating:
 ```
@@ -150,7 +154,7 @@ for this we're going to take advantage that the indices are cyclic in both direc
 huh, not quite. the index 0 has to become -1, the index 1 has to become -2... let's try adding one before negating!
 
 ```
-"catnip"  # !: 1+: -: ^  .. "cpinta"
+"catnip"  # !: 1+: -: ^  .. "pintac"
 ```
 
 ## transpose
