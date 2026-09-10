@@ -99,9 +99,9 @@ getting the minimum `{/` and maximum `}/` of an array is pretty common, and thes
 
 using these in boolean arrays with scan `\` gives what i call the "smear vectors": `}\` marks with ones after the first 1, and `{\` marks with ones until the first 0:
 ```
-    1 1 1 0 1 0 1 1 ,{\
+    1 1 1 0 1 0 1 1 , {\
 ..{ 1 1 1 0 0 0 0 0 }
-    0 0 0 1 0 1 1 0 1 0 ,}\
+    0 0 0 1 0 1 1 0 1 0 , }\
 ..{ 0 0 0 1 1 1 1 1 1 1 }
 ```
 

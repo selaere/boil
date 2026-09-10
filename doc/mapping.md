@@ -107,7 +107,7 @@ another example, this time the repeated argument is a number and not a list. you
 what if we applied both each-right `'` and each-left `':` at once?
 ```
     1 2 3 ,  4 5 6 ,(; ' ':)
- .. 1 2 3 ,  4 5 6 ,;' '      .. reduced
+ .. 1 2 3 ,  4 5 6 , ;' '      .. reduced
 {
     { { 1 4 } { 1 5 } { 1 6 } }
     { { 2 4 } { 2 5 } { 2 6 } }
