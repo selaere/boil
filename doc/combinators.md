@@ -51,15 +51,12 @@ if `]` is application, then `[` is swapped application. `[` is `` ]` ``. the sym
 
 another reason for that symbol is that it is nice to think of it as indexing:
 ```
-    2 1+ "words"[
-'d'
-    2 1+ "words"[]  .. the same, ] does nothing
-'d'
+2 1+ "words"[   .. "d"0
+2 1+ "words"[]  .. the same, ] does nothing
 ```
 like this, it just looks like some strange reversal of the indexing syntax you would find in languages like python: `"words"[2+1]`. of course, you could write it like this:
 ```
-    "words"  2 1+
-'d'
+"words"  2 1+   .. "d"0
 ```
 but then you need to introduce more whitespace. if the index is a complex expression, and the array a constant or a variable, this can be much more convenient.
 
@@ -168,7 +165,7 @@ or using it tacitly, as we saw before that `` G F`: `` = `F GS`:
 
 S is used in the [SKI combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus): we already have the K = `@` and I = `]` combinators. it is a minimal set of combinators, with which you can write any lambda calculus term and really do any arbitrary computation (without using any numbers or lists!)
 
-we don't need to define S to have the power of SKI calculus. a well known equivalent system is the [BCKW system](https://en.wikipedia.org/wiki/B,_C,_K,_W_system) which matches with the combinators we already have: B = `:`, C = `` ` ``, K = `` @ ``, W = `^`. i like the BCKW set better because the individual combinators are simpler, so all of them are in boil
+we don't need to define S to have the power of SKI calculus. a well known equivalent system is the [BCKW system](https://en.wikipedia.org/wiki/B,_C,_K,_W_system) which matches with the combinators we already have: B = `:`, C = `` ` ``, K = `` @ ``, W = `^`. i like the BCKW set better because the individual combinators are simpler, so all of them are in boil.
 
 interestingly, replacing swap by thrush, ``: [ @ ^``, also yields a minimal system. to prove this we need to redefine swap using these combinators. we can do this using `:` compose and `[` thrush using a trick we've seen earlier:
 

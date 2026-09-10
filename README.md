@@ -1,15 +1,15 @@
 # boil
-is a dynamically typed functional pure-ish language based on untyped lambda calculus etc etc. boring. it is also a minimalistic<sup>1</sup> vector<sup>2</sup> tacit<sup>3</sup> programming language with postfix<sup>4</sup>, whitespace-based<sup>5</sup> terse<sup>6</sup> syntax
+is a dynamically typed functional language based on the untyped lambda calculus. it is also a minimalistic<sup>1</sup> vector<sup>2</sup> tacit<sup>3</sup> programming language with suffix<sup>4</sup>, whitespace-based<sup>5</sup> terse<sup>6</sup> syntax
 
 1. there are not a lot of built-in functions (see [primitives](#primitives))
 2. boil values can either be scalars or vectors (which i will from here on just call "lists"). arithmetic operations like `+` (addition) map to every element in a list.
 3. functions can be defined using combinators like `:` compose, as well as currying for partial evaluation.
 4. `x-` means "minus x". application goes in left-to-right order
-5. spaces are used to regroup things: `ABCD` is `((AB)C)D`, `A  B CD` is `A(B(CD))`. `x yF` calls F with y and x
-6. most built-in are just ascii symbols (these are called "primitives")
+5. spaces are used to regroup things: `ABCD` is `((AB)C)D`, `A  B CD` is `A(B(CD))`. `x yF` calls F with y and x as arguments
+6. most built-ins are just ascii symbols (these are called "primitives")
 
 ## read more
-* [introduction](doc/introduction.md) (probably start here, a kind of )
+* [introduction](doc/introduction.md) (probably start here, a kind of programming guide)
 * [implementing stuff with lists](doc/rearranging_lists.md)
   * [sorting](doc/sorting.md) `~`
   * [reading](doc/reading.md) (splitting, parsing numbers)
@@ -22,16 +22,6 @@ is a dynamically typed functional pure-ish language based on untyped lambda calc
 * [syntax](doc/syntax.md) (more details about how precedence works)
 * [commentary](doc/commentary.md) (inspirations, discourse, blah blah blah)
 
-## how to run/build
-install [factor](https://factorcode.org) (0.99 works) and then, replacing `factor` by whichever name you have factor installed with,
-* `factor boil.factor`,
-* or place boil in your work folder and `"boil" deploy`,
-* or if you dont know what that means,
-  ```sh
-  git clone https://github.com/selaere/boil
-  factor -e='USE: namespaces "." deploy-directory set "." add-vocab-root "boil" deploy'
-  # ^ run outside the cloned repo
-  ```
 
 ## primitives
 <table><tr></tr>
@@ -226,7 +216,7 @@ install [factor](https://factorcode.org) (0.99 works) and then, replacing `facto
 * `xDeco` returns the two components of ratio x
 * `pi` is pi
 
-these are the reason why i said "pure-ish" at the start:
+not pure:
 * `input` gets all the input from stdin until eof
 * `sWrite` writes a string to stdout
 * `sPrint` writes a string to stdout with a trailing newline
@@ -234,9 +224,23 @@ these are the reason why i said "pure-ish" at the start:
 * `xOuts` prettyprints x and returns x, where lists with only numbers will be formatted as strings
 * `nRand` returns a random integer in [0, n). if n = 0, return a random float in [0.0, 1.0)
 
-## repl
 
-if you call the executable with no arguments you get sent to a repl. type in expressions, press enter, and pretty-printed results come out! if you write a line with `var.` at the end, the result of that expression will be saved in the repl environment with the name _var_. you can also access the last result with `z`. there are also some other commands that can be used at the beginning of a line (these will probably change):
+## how to run/build
+install [factor](https://factorcode.org) (0.99 and up works).
+to run:
+* execute `factor boil.factor` (factor may be installed with a different name)
+* or place boil in your work folder and enter `USE: boil repl` inside the factor listener
+
+to build an executable
+* place boil in your work folder and enter `"boil" deploy` in the factor listener.
+* or run this outside the cloned repo: 
+  ```sh
+  factor -e='USE: namespaces "." deploy-directory set "." add-vocab-root "boil" deploy'
+  ```
+
+### repl
+
+if you call the executable with no arguments, or write `repl` in the factor listener, you get sent to a repl. type in expressions, press enter, and pretty-printed results come out! if you write a line with `var.` at the end, the result of that expression will be saved in the repl environment with the name _var_. you can also access the last result with `z`. there are also some other commands that can be used at the beginning of a line (these will probably change):
 * `)q`: quit
 * `)s`: pretty-prints the result, where lists with only numbers will be formatted as strings
 * `)v`: show name of every variable set in the environment
