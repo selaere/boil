@@ -39,7 +39,7 @@ forth fans in the audience are drooling right now.
 
 i call this guy "perplexed face". he encompasses all feelings of "meh"ness. "meh" because, like, this is really cool, but do i really have to type ` ,:/`? like that's ehhhhh like it makes sense but i dont _love_ it
 
-know that it's perfectly fine to use lambdas! `x. x a b c` is probably easier to understand (though a bit more annoying if you have to apply something to the whole function), and if all your functions are precedence 0, `x.x!+'` is shorter than `!+', :/` or `! +: ::`
+know that it's perfectly fine to use lambdas! `x. x a b c` is probably easier to understand (though a bit more annoying if you have to apply something to the whole function), and if all your functions are precedence 0, `x.x!+'` is shorter than `!+', :/` or `! +: ':`
 
 another thing perplexie is good at is "indexing at depth". say we use `2 3 4 ,!` as a list:
 ```
