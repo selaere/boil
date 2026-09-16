@@ -88,6 +88,12 @@ Church numerals are a way of implementing natural numbers in pure lambda calculu
 * 3 = `F.x. xFFF`
 * ...
 
+We can turn these tacit too if we want:
+* We want `x FZero` to be `x`, so 0 is `]@` (ignore the function, always return identity) or `` @` `` (swapped const)
+* We want `x FOne` to be `xF`, so just calling the function normally. 1 is `]` (identity)
+* For 2 we want to run the function twice, so it's `:^` (compose self)
+* For 3 we need to build `F F: F:`, but `F  F F: :` is easier to turn tacit. The result ends up being `:^ :: ^`.
+
 To turn a church numeral to a boil number just call it with `+1` and `0`: increment the number `0`, n times.
 
 ```
@@ -114,6 +120,19 @@ N.f.x. x f fN  Inc.
 Or alternatively using combinators as `N.f. f fN:` === `N.f. f f(N ::)` === `N. N :: ^` === `:: ^:` which is a little smaller.
 ```
 0 1+(Four  :: ^:)  .. 5
+```
+
+Increment as `:: ^:` is not very surprising, just before we saw that 2 is `:^`, and 3 is `:^ :: ^`. It literally has the 2 in there, with `::` and `^` applied on top, so `TwoInc` = `:^  :: ^:` = `:^ :: ^` = `Three`. We can also convince ourselves that `OneInc` = `Two` because `]  :: ^:` = `] :: ^` and composing to the identity does nothing (`] F:` = `F ]:` = `F`) so `] :: ^` = `:^`.
+
+So we can write every natural number like this, we don't need any lambdas:
+
+```
+]@                 Zero.
+]                  One.
+:^                 Two.
+:^ :: ^            Three.
+:^ :: ^ :: ^       Four.
+:^ :: ^ :: ^ :: ^  Five.
 ```
 
 #### Addition
