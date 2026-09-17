@@ -61,7 +61,7 @@ UNION: val   number array func lambda ;
   [ CHAR: " = not ] cut-some-while swap rest-slice ;
 : cut-string ( src -- src' str )
   (cut-string) [ rest-slice ] dip
-  [ dup first CHAR: " = ] [ (cut-string) [ append ] dip ] while swap
+  [ dup ?first CHAR: " = ] [ (cut-string) [ append ] dip ] while swap
 ; 
 
 : continuation-letter ( chr -- ? )
