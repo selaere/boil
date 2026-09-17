@@ -107,7 +107,7 @@ aha! so we can do this:
 ```
 "one" "two"(y.x.x y.x.y ,)
 ```
-these are two common combinators. the second is the definition of `@`, and the first may be written as `]@` or `` @` `` (just the flipped version of `@`).
+these are two common combinators. the second is the definition of `@`, and the first may be written as `]@` or `` @` `` (just the flipped version of `@`). concatenating two functions just makes a pair, so
 ```
 "one" "two"(@` @;)    .. { "one" "two" }
 "one" "two"(]@ @;)    .. { "one" "two" }

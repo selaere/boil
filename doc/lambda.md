@@ -223,3 +223,20 @@ F.x. xFFF      Three.
 0 1+(Seven ThreeSub)  .. 4
 ```
 
+#### boil to Church
+
+How do we turn a boil number into a church numeral? `?` (where) will be useful, we just need to compose a function to itself n times.
+
+```
+5?      .. { 0 0 0 0 0 }
+1+$ 5?  .. { ( 1 + ) ( 1 + ) ( 1 + ) ( 1 + ) ( 1 + ) }
+```
+
+Compose all of those together, adding an identity element so it doesn't fail for zero.
+
+```
+0   1+$ 5? ]; :/    .. 5
+0!  "wa";$ ? ]; :/  .. "wawawawawa"
+```
+
+So a function that churchifies a number is `x.F. F$ x? ]; :/`. This made tacit is ``?  $ :` :  ];::  :/::``.
